@@ -65,13 +65,13 @@ int main(int argc, char *argv[])
 
         else
         {
-            fprintf(stderr, "Invalid argument. Correct argument is either pc or cs\n");
+            fprintf(stderr, "Invalid argument. Please refer to the documentations for list of arguments\n");
             return EXIT_FAILURE;
         }
     }
     else
     {
-        fprintf(stderr, "Program needs an argument. Correct argument is either pc or cs\n");
+        fprintf(stderr, "Program needs an argument. Please refer to the documentations for list of arguments\n");
         return EXIT_FAILURE;
     }
 
