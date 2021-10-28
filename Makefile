@@ -1,8 +1,8 @@
 CFLAGS = -g -Wall
 CC = gcc
-LIBS = 
+LIBS =
 TARGET = VSFS
-SOURCES = 
+SOURCES = init.c
 OBJECTS = $(SOURCES:.c=.o)
 HEADERS = $(SOURCES:.c=.h)
 RM = rm -f

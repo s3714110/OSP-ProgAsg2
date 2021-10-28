@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include "init.h"
 
 #define MenuBreakTime 1
 
@@ -9,7 +10,8 @@ int main(int argc, char *argv[])
 {
 
     fprintf(stdout, "VSFS program for OSP Assignment 2, made by Lam Tran, student id: s3714110\n");
-  
+    init();
+
     if (argc >= 2)
     {
         if (strcmp(argv[1], "list") == 0)
