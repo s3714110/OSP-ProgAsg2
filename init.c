@@ -10,29 +10,22 @@ int init(char *filename)
 {
     FILE *file;
 
-    if ( (file = fopen(filename, "r")) )
-    {   
-        char *p;
+    if ((file = fopen(filename, "r")))
+    {
         char test_line[MAX_LINE_LENGTH] = ValidFileCheck;
-    
+        
         char first_line[MAX_LINE_LENGTH] = {0};
         fgets(first_line, MAX_LINE_LENGTH, file);
-        
-        if ( (p = strchr(first_line, '\n')) != NULL)
-        {
-            *p = '\0';
-        }
-        
-        printf("first: %s", first_line);
-        printf("test: %s", test_line);
-        
-        if (strcmp(first_line, "NOTES V1.0") == 0)
+
+        first_line[strcspn(first_line, "\n")] = '\0';
+
+        if (strcmp(first_line, test_line) == 0)
         {
             printf("This is a valid notes file\n");
         }
-        else 
+        else
         {
-             printf("This is not a valid notes file\n");
+            printf("This is not a valid notes file\n");
         }
 
         fclose(file);
@@ -45,4 +38,3 @@ int init(char *filename)
 
     return 0;
 }
-
