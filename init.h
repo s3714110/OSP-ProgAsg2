@@ -1,1 +1,1 @@
-int init(void);
+int init(char *filename);

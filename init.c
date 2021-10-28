@@ -4,13 +4,11 @@
 #include <string.h>
 #include <stdio.h>
 
-#define DefaultFilesystemName "FS.notes"
-
-int init(void)
+int init(char *filename)
 {
     FILE *file;
 
-    if ( (file = fopen(DefaultFilesystemName, "r")) )
+    if ( (file = fopen(filename, "r")) )
     {
         fclose(file);
         printf("file exists");

@@ -5,12 +5,14 @@
 #include "init.h"
 
 #define MenuBreakTime 1
+#define DefaultFilesystemName "FS.notes"
+
 
 int main(int argc, char *argv[])
 {
 
     fprintf(stdout, "VSFS program for OSP Assignment 2, made by Lam Tran, student id: s3714110\n");
-    init();
+    init(DefaultFilesystemName);
 
     if (argc >= 2)
     {
