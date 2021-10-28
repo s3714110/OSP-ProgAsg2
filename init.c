@@ -12,8 +12,9 @@ int init(char *filename)
 
     if ((file = fopen(filename, "r")))
     {
+        printf("The notes file has been detected\n");
         char test_line[MAX_LINE_LENGTH] = ValidFileCheck;
-        
+
         char first_line[MAX_LINE_LENGTH] = {0};
         fgets(first_line, MAX_LINE_LENGTH, file);
 
@@ -25,20 +26,20 @@ int init(char *filename)
         }
         else
         {
-            printf("This is not a valid notes file\n");
+            fprintf(stderr, "This is not a valid notes file. Please remove the notes file and run the program again\n");
+            exit(EXIT_FAILURE);
         }
 
         fclose(file);
-        printf("file exists\n");
     }
     else
     {
-        printf("file doesn't exist\n");
+        printf("Notes file not detected. Creating a new notes files...\n");
         file = fopen(filename, "w");
         fprintf(file, "%s\n", ValidFileCheck);
         fclose(file);
         printf("New file created\n");
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
