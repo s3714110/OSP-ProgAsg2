@@ -34,6 +34,10 @@ int init(char *filename)
     else
     {
         printf("file doesn't exist\n");
+        file = fopen(filename, "w");
+        fprintf(file, "%s\n", ValidFileCheck);
+        fclose(file);
+        printf("New file created\n");
     }
 
     return 0;
