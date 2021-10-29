@@ -48,13 +48,13 @@ int main(int argc, char *argv[])
 
     fprintf(stdout, "VSFS program for OSP Assignment 2, made by Lam Tran, student id: s3714110\n");
 
-    if (argc >= 2)
+    if (argc >= 3)
     {
-        if (strcmp(argv[1], "list") == 0)
+        if (check_directory(argv[2]) == 1)
         {
-            if (argc == 3)
+            if (strcmp(argv[1], "list") == 0)
             {
-                if(check_directory(argv[2]) == 1)
+                if (argc == 3)
                 {
                     init(argv[2]);
                     fprintf(stdout, "VSFS is now running list function for filesystem %s ...\n", argv[2]);
@@ -63,63 +63,71 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    fprintf(stderr, "Directory does not exist. Please check the path and run the program again\n");
+                    fprintf(stderr, "Invalid format. Please refer to the documentations for list of arguments\n");
                     exit(EXIT_FAILURE);
                 }
-                
             }
+            else if (strcmp(argv[1], "copyin") == 0)
+            {
+                fprintf(stdout, "VSFS is now running copyin function...\n");
+                sleep(MenuBreakTime);
+            }
+            else if (strcmp(argv[1], "copyout") == 0)
+            {
+                fprintf(stdout, "VSFS is now running copyout function...\n");
+                sleep(MenuBreakTime);
+            }
+            else if (strcmp(argv[1], "mkdir") == 0)
+            {
+                if (argc == 4)
+                {
+                    fprintf(stdout, "VSFS is now running mkdir to create directory %s for filesystem %s...\n", argv[3], argv[2]);
+                    sleep(MenuBreakTime);
+                }
+
+                else
+                {
+                    fprintf(stderr, "Invalid format. Please refer to the documentations for list of arguments\n");
+                    exit(EXIT_FAILURE);
+                }
+            }
+            else if (strcmp(argv[1], "rm") == 0)
+            {
+                fprintf(stdout, "VSFS is now running rm function...\n");
+                sleep(MenuBreakTime);
+            }
+            else if (strcmp(argv[1], "rmdir") == 0)
+            {
+                fprintf(stdout, "VSFS is now running rmdir function...\n");
+                sleep(MenuBreakTime);
+            }
+            else if (strcmp(argv[1], "defrag") == 0)
+            {
+                fprintf(stdout, "VSFS is now running defrag function...\n");
+                sleep(MenuBreakTime);
+            }
+            else if (strcmp(argv[1], "index") == 0)
+            {
+                fprintf(stdout, "VSFS is now running index function...\n");
+                sleep(MenuBreakTime);
+            }
+
             else
             {
-                fprintf(stderr, "Invalid format. Please refer to the documentations for list of arguments\n");
+                fprintf(stderr, "Invalid argument. Please refer to the documentations for list of arguments\n");
                 exit(EXIT_FAILURE);
             }
         }
-        else if (strcmp(argv[1], "copyin") == 0)
-        {
-            fprintf(stdout, "VSFS is now running copyin function...\n");
-            sleep(MenuBreakTime);
-        }
-        else if (strcmp(argv[1], "copyout") == 0)
-        {
-            fprintf(stdout, "VSFS is now running copyout function...\n");
-            sleep(MenuBreakTime);
-        }
-        else if (strcmp(argv[1], "mkdir") == 0)
-        {
-            fprintf(stdout, "VSFS is now running mkdir function...\n");
-            sleep(MenuBreakTime);
-        }
-        else if (strcmp(argv[1], "rm") == 0)
-        {
-            fprintf(stdout, "VSFS is now running rm function...\n");
-            sleep(MenuBreakTime);
-        }
-        else if (strcmp(argv[1], "rmdir") == 0)
-        {
-            fprintf(stdout, "VSFS is now running rmdir function...\n");
-            sleep(MenuBreakTime);
-        }
-        else if (strcmp(argv[1], "defrag") == 0)
-        {
-            fprintf(stdout, "VSFS is now running defrag function...\n");
-            sleep(MenuBreakTime);
-        }
-        else if (strcmp(argv[1], "index") == 0)
-        {
-            fprintf(stdout, "VSFS is now running index function...\n");
-            sleep(MenuBreakTime);
-        }
-
         else
         {
-            fprintf(stderr, "Invalid argument. Please refer to the documentations for list of arguments\n");
+            fprintf(stderr, "Directory does not exist. Please check the path and run the program again\n");
             exit(EXIT_FAILURE);
         }
     }
 
     else
     {
-        fprintf(stderr, "Program needs an argument. Please refer to the documentations for list of arguments\n");
+        fprintf(stderr, "Program is missing arguments. Please refer to the documentations for list of arguments\n");
         exit(EXIT_FAILURE);
     }
 

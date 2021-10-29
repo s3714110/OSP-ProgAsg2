@@ -32,7 +32,6 @@ int count_links(char *name, char *filename)
         }
     }
 
-    
     char dir_of_file[MAX_ATTR_LENGTH] = {0};
     strncpy(dir_of_file, temp_path, index_of_slash + 1);
 
