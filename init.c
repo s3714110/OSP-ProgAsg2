@@ -195,7 +195,7 @@ int init(char *filename)
 
                     if (directory_exist(next_line, filename) == 0)
                     {
-                        fprintf(stderr, "%s is not a valid path because the directory does not exist ! This is not a valid notes file. Please remove the notes file and run the program again\n", next_line);
+                        fprintf(stderr, "%s is not a valid path because the directory above this does not exist ! This is not a valid notes file. Please remove the notes file and run the program again\n", next_line);
                         exit(EXIT_FAILURE);
                     }
 

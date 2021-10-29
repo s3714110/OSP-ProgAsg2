@@ -13,10 +13,12 @@
 
 int count_links(char *name, char *filename)
 {
-    int links = -1;
+    int links = 0;
     FILE *temp_file;
     char temp_line[MAX_ATTR_LENGTH] = {0};
     int index_of_slash = -1;
+    int dir_slash_count = 0;
+    int subdir_slash_count = 0;
 
     char temp_path[MAX_ATTR_LENGTH] = {0};
     strncpy(temp_path, name, MAX_ATTR_LENGTH);
@@ -26,9 +28,11 @@ int count_links(char *name, char *filename)
         if (temp_path[i] == '/')
         {
             index_of_slash = i;
+            dir_slash_count++;
         }
     }
 
+    
     char dir_of_file[MAX_ATTR_LENGTH] = {0};
     strncpy(dir_of_file, temp_path, index_of_slash + 1);
 
@@ -36,13 +40,25 @@ int count_links(char *name, char *filename)
     {
         while (fgets(temp_line, MAX_ATTR_LENGTH, temp_file))
         {
-
             temp_line[strcspn(temp_line, "\n")] = '\0';
 
-            if (strncmp(dir_of_file, temp_line, index_of_slash + 1) == 0)
+            for (int i = 0; i <= strlen(temp_line); i++)
             {
-                links++;
+                if (temp_line[i] == '/')
+                {
+                    subdir_slash_count++;
+                }
             }
+
+            if ((strncmp(dir_of_file, temp_line, index_of_slash + 1) == 0))
+            {
+                int slash_diff = subdir_slash_count - dir_slash_count;
+                if (slash_diff == 1)
+                {
+                    links++;
+                }
+            }
+            subdir_slash_count = 0;
         }
 
         fclose(temp_file);
@@ -56,6 +72,7 @@ int count_lines(char *name, char *filename)
     int lines = 0;
     FILE *temp_file;
     char temp_line[MAX_ATTR_LENGTH] = {0};
+    bool reading_a_file = false;
 
     if ((temp_file = fopen(filename, "r")))
     {
@@ -65,12 +82,17 @@ int count_lines(char *name, char *filename)
 
             if (strcmp(name, temp_line) == 0)
             {
-                while (fgets(temp_line, MAX_ATTR_LENGTH, temp_file))
+                reading_a_file = true;
+                while ((fgets(temp_line, MAX_ATTR_LENGTH, temp_file)) && reading_a_file)
                 {
                     temp_line[strcspn(temp_line, "\n")] = '\0';
                     if (temp_line[0] == ' ')
                     {
                         lines++;
+                    }
+                    else
+                    {
+                        reading_a_file = false;
                     }
                 }
             }
@@ -103,12 +125,6 @@ int list(char *filename)
     (fileStat.st_mode & S_IWOTH) ? (permissions[8] = 'w') : (permissions[8] = '-');
     (fileStat.st_mode & S_IXOTH) ? (permissions[9] = 'x') : (permissions[9] = '-');
 
-    printf("Permission: ");
-    for (int i = 0; i < MAX_ATTR_LENGTH; i++)
-    {
-        printf("%c", permissions[i]);
-    }
-
     struct passwd *pw = getpwuid(fileStat.st_uid);
     struct group *gr = getgrgid(fileStat.st_gid);
 
@@ -131,9 +147,63 @@ int list(char *filename)
         strftime(date, MAX_ATTR_LENGTH, "%b %e  %Y", &tmfile);
     }
 
-    printf("Owner: %s\n", owners);
-    printf("Group: %s\n", groups);
-    printf("Date: %s\n", date);
+    FILE *file;
+    if ((file = fopen(filename, "r")))
+    {
+        char next_line[MAX_ATTR_LENGTH] = {0};
+
+        while (fgets(next_line, MAX_ATTR_LENGTH, file))
+        {
+            next_line[strcspn(next_line, "\n")] = '\0';
+            if (next_line[0] == '@')
+            {
+                char dir_name[MAX_ATTR_LENGTH] = {0};
+                strncpy(dir_name, next_line, MAX_ATTR_LENGTH);
+                dir_name[0] = '\0';
+
+                permissions[0] = '-';
+                int hard_links = 1;
+                int size = count_lines(next_line, filename);
+
+                for (int i = 0; i < MAX_ATTR_LENGTH; i++)
+                {
+                    printf("%c", permissions[i]);
+                }
+                printf(" %d %s %s %d %s ", hard_links, owners, groups, size, date);
+
+                for (int i = 0; i < MAX_ATTR_LENGTH; i++)
+                {
+                    printf("%c", dir_name[i]);
+                }
+
+                printf("\n");
+            }
+            else if (next_line[0] == '=')
+            {
+                char dir_name[MAX_ATTR_LENGTH] = {0};
+                strncpy(dir_name, next_line, MAX_ATTR_LENGTH);
+                dir_name[0] = '\0';
+
+                permissions[0] = 'd';
+                int hard_links = count_links(next_line, filename);
+                int size = 0;
+
+                for (int i = 0; i < MAX_ATTR_LENGTH; i++)
+                {
+                    printf("%c", permissions[i]);
+                }
+                printf(" %d %s %s %d %s ", hard_links, owners, groups, size, date);
+
+                for (int i = 0; i < MAX_ATTR_LENGTH; i++)
+                {
+                    printf("%c", dir_name[i]);
+                }
+
+                printf("\n");
+            }
+        }
+        fclose(file);
+    }
 
     return EXIT_SUCCESS;
 }
