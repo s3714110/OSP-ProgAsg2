@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include "init.h"
+#include "list.h"
 
 #define MenuBreakTime 1
 #define DefaultFilesystemName "FS.notes"
@@ -58,6 +59,7 @@ int main(int argc, char *argv[])
                     init(argv[2]);
                     fprintf(stdout, "VSFS is now running list function for filesystem %s ...\n", argv[2]);
                     sleep(MenuBreakTime);
+                    list(argv[2]);
                 }
                 else
                 {
