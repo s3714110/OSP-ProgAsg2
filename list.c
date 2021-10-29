@@ -11,6 +11,75 @@
 
 #define MAX_ATTR_LENGTH 255
 
+int count_links(char *name, char *filename)
+{
+    int links = -1;
+    FILE *temp_file;
+    char temp_line[MAX_ATTR_LENGTH] = {0};
+    int index_of_slash = -1;
+
+    char temp_path[MAX_ATTR_LENGTH] = {0};
+    strncpy(temp_path, name, MAX_ATTR_LENGTH);
+
+    for (int i = 0; i <= strlen(temp_path); i++)
+    {
+        if (temp_path[i] == '/')
+        {
+            index_of_slash = i;
+        }
+    }
+
+    char dir_of_file[MAX_ATTR_LENGTH] = {0};
+    strncpy(dir_of_file, temp_path, index_of_slash + 1);
+
+    if ((temp_file = fopen(filename, "r")))
+    {
+        while (fgets(temp_line, MAX_ATTR_LENGTH, temp_file))
+        {
+
+            temp_line[strcspn(temp_line, "\n")] = '\0';
+
+            if (strncmp(dir_of_file, temp_line, index_of_slash + 1) == 0)
+            {
+                links++;
+            }
+        }
+
+        fclose(temp_file);
+    }
+
+    return links;
+}
+
+int count_lines(char *name, char *filename)
+{
+    int lines = 0;
+    FILE *temp_file;
+    char temp_line[MAX_ATTR_LENGTH] = {0};
+
+    if ((temp_file = fopen(filename, "r")))
+    {
+        while (fgets(temp_line, MAX_ATTR_LENGTH, temp_file))
+        {
+            temp_line[strcspn(temp_line, "\n")] = '\0';
+
+            if (strcmp(name, temp_line) == 0)
+            {
+                while (fgets(temp_line, MAX_ATTR_LENGTH, temp_file))
+                {
+                    temp_line[strcspn(temp_line, "\n")] = '\0';
+                    if (temp_line[0] == ' ')
+                    {
+                        lines++;
+                    }
+                }
+            }
+        }
+        fclose(temp_file);
+    }
+
+    return lines;
+}
 int list(char *filename)
 {
     char permissions[MAX_ATTR_LENGTH] = {0};
@@ -61,7 +130,7 @@ int list(char *filename)
     {
         strftime(date, MAX_ATTR_LENGTH, "%b %e  %Y", &tmfile);
     }
-    
+
     printf("Owner: %s\n", owners);
     printf("Group: %s\n", groups);
     printf("Date: %s\n", date);
