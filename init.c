@@ -13,16 +13,40 @@ int init(char *filename)
     if ((file = fopen(filename, "r")))
     {
         printf("The notes file has been detected\n");
-        char test_line[MAX_LINE_LENGTH] = ValidFileCheck;
+        int line_count = 0;
 
+        char test_line[MAX_LINE_LENGTH] = ValidFileCheck;
         char first_line[MAX_LINE_LENGTH] = {0};
+        char next_line[MAX_LINE_LENGTH] = {0};
+
         fgets(first_line, MAX_LINE_LENGTH, file);
+        line_count++;
 
         first_line[strcspn(first_line, "\n")] = '\0';
 
         if (strcmp(first_line, test_line) == 0)
         {
-            printf("This is a valid notes file\n");
+            printf("Note file identifier detected. Checking for file validity...\n");
+            while (fgets(next_line, MAX_LINE_LENGTH, file))
+            {
+                if ( next_line[0] == '@' )
+                {
+                }
+                else if ( next_line[0] == '=' )
+                {
+                }
+                else if ( next_line[0] == '#' )
+                {
+                }
+                else if ( next_line[0] == ' ' )
+                {
+                }
+                else
+                {
+                    fprintf(stderr, "This is not a valid notes file. Please remove the notes file and run the program again\n");
+                    exit(EXIT_FAILURE);
+                }
+            }
         }
         else
         {
