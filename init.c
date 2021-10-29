@@ -39,6 +39,7 @@ int duplicate_name(char *name, int start_line, char *filename)
     return is_duplicate;
 }
 
+
 int init(char *filename)
 {
     FILE *file;
@@ -51,6 +52,7 @@ int init(char *filename)
         char test_line[MAX_LINE_LENGTH] = ValidFileCheck;
         char first_line[MAX_LINE_LENGTH] = {0};
         char next_line[MAX_LINE_LENGTH] = {0};
+        char previous_line[MAX_LINE_LENGTH] = {0};
 
         fgets(first_line, MAX_LINE_LENGTH, file);
         line_count++;
@@ -72,6 +74,12 @@ int init(char *filename)
                         fprintf(stderr, "This is not a valid notes file. Please remove the notes file and run the program again\n");
                         exit(EXIT_FAILURE);
                     }
+
+                    if( next_line[strcspn(next_line, "\0") - 1] == '/' )
+                    {
+                        fprintf(stderr, "File name syntax error detected at line %d ! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
+                        exit(EXIT_FAILURE);
+                    }
                 }
                 else if (next_line[0] == '=')
                 {
@@ -80,6 +88,13 @@ int init(char *filename)
                         fprintf(stderr, "This is not a valid notes file. Please remove the notes file and run the program again\n");
                         exit(EXIT_FAILURE);
                     }
+
+                    if (next_line[strcspn(next_line, "\0") - 1] != '/')
+                    {
+                        fprintf(stderr, "Directory name syntax error detected at line %d ! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
+                        exit(EXIT_FAILURE);
+                    }
+
                 }
                 else if (next_line[0] == '#')
                 {
@@ -89,14 +104,14 @@ int init(char *filename)
                 }
                 else
                 {
-                    fprintf(stderr, "This is not a valid notes file. Please remove the notes file and run the program again\n");
+                    fprintf(stderr, "Unrecognised first character detected! This is not a valid notes file. Please remove the notes file and run the program again\n");
                     exit(EXIT_FAILURE);
                 }
             }
         }
         else
         {
-            fprintf(stderr, "This is not a valid notes file. Please remove the notes file and run the program again\n");
+            fprintf(stderr, "Notes indentifier not found! This is not a valid notes file. Please remove the notes file and run the program again\n");
             exit(EXIT_FAILURE);
         }
 
