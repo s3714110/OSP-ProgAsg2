@@ -39,6 +39,53 @@ int duplicate_name(char *name, int start_line, char *filename)
     return is_duplicate;
 }
 
+int directory_exist(char *name, char *filename)
+{
+    int exist = 0;
+    FILE *temp_file;
+    char temp_line[MAX_LINE_LENGTH] = {0};
+    int index_of_slash = -1;
+
+    if (name[0] == '@')
+    {
+        for (int i = 0; i <= strlen(name); i++)
+        {
+            if (name[i] == '/')
+            {
+                index_of_slash = i;
+            }
+        }
+
+        if (index_of_slash == -1)
+        {
+            exist = 1;
+        }
+        else
+        {
+            char dir_of_file[MAX_LINE_LENGTH] = {0};
+            strncpy(dir_of_file, name, index_of_slash + 1);
+            dir_of_file[0] = '=';
+
+            if ((temp_file = fopen(filename, "r")))
+            {
+                while (fgets(temp_line, MAX_LINE_LENGTH, temp_file))
+                {
+
+                    temp_line[strcspn(temp_line, "\n")] = '\0';
+
+                    if (strcmp(dir_of_file, temp_line) == 0)
+                    {
+                        exist = 1;
+                    }
+                }
+
+                fclose(temp_file);
+            }
+        }
+    }
+
+    return exist;
+}
 
 int init(char *filename)
 {
@@ -53,6 +100,8 @@ int init(char *filename)
         char first_line[MAX_LINE_LENGTH] = {0};
         char next_line[MAX_LINE_LENGTH] = {0};
         char previous_line[MAX_LINE_LENGTH] = {0};
+
+        bool reading_a_file = false;
 
         fgets(first_line, MAX_LINE_LENGTH, file);
         line_count++;
@@ -75,11 +124,19 @@ int init(char *filename)
                         exit(EXIT_FAILURE);
                     }
 
-                    if( next_line[strcspn(next_line, "\0") - 1] == '/' )
+                    if (next_line[strcspn(next_line, "\0") - 1] == '/')
                     {
                         fprintf(stderr, "File name syntax error detected at line %d ! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
                         exit(EXIT_FAILURE);
                     }
+
+                    if (directory_exist(next_line, filename) == 0)
+                    {
+                        fprintf(stderr, "%s is not a valid path because the directory does not exist ! This is not a valid notes file. Please remove the notes file and run the program again\n", next_line);
+                        exit(EXIT_FAILURE);
+                    }
+
+                    reading_a_file = false;
                 }
                 else if (next_line[0] == '=')
                 {
@@ -95,18 +152,27 @@ int init(char *filename)
                         exit(EXIT_FAILURE);
                     }
 
+                    reading_a_file = false;
                 }
                 else if (next_line[0] == '#')
                 {
+                    reading_a_file = false;
                 }
                 else if (next_line[0] == ' ')
                 {
+                    if ( (previous_line[0] != '@') && (!reading_a_file) )
+                    {
+                        fprintf(stderr, "Error Detected at line %d! File content needs to be under a file! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
+                        exit(EXIT_FAILURE);
+                    }
+                    reading_a_file = true;
                 }
                 else
                 {
-                    fprintf(stderr, "Unrecognised first character detected! This is not a valid notes file. Please remove the notes file and run the program again\n");
+                    fprintf(stderr, "Unrecognised first character detected at line %d! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
                     exit(EXIT_FAILURE);
                 }
+                strncpy(previous_line, next_line, MAX_LINE_LENGTH);
             }
         }
         else
@@ -115,6 +181,7 @@ int init(char *filename)
             exit(EXIT_FAILURE);
         }
 
+        printf("Checking completed! This notes file is valid\n");
         fclose(file);
     }
     else
