@@ -84,6 +84,47 @@ int directory_exist(char *name, char *filename)
         }
     }
 
+    else if (name[0] == '=')
+    {
+        char temp_path[MAX_LINE_LENGTH] = {0};
+        strncpy(temp_path, name, MAX_LINE_LENGTH);
+        temp_path[strcspn(temp_path, "\0") - 1] = '\0';
+
+        for (int i = 0; i <= strlen(temp_path); i++)
+        {
+            if (temp_path[i] == '/')
+            {
+                index_of_slash = i;
+            }
+        }
+
+        if (index_of_slash == -1)
+        {
+            exist = 1;
+        }
+        else
+        {
+            char dir_of_file[MAX_LINE_LENGTH] = {0};
+            strncpy(dir_of_file, temp_path, index_of_slash + 1);
+            dir_of_file[0] = '=';
+
+            if ((temp_file = fopen(filename, "r")))
+            {
+                while (fgets(temp_line, MAX_LINE_LENGTH, temp_file))
+                {
+
+                    temp_line[strcspn(temp_line, "\n")] = '\0';
+
+                    if (strcmp(dir_of_file, temp_line) == 0)
+                    {
+                        exist = 1;
+                    }
+                }
+
+                fclose(temp_file);
+            }
+        }
+    }
     return exist;
 }
 
@@ -149,6 +190,12 @@ int init(char *filename)
                     if (next_line[strcspn(next_line, "\0") - 1] != '/')
                     {
                         fprintf(stderr, "Directory name syntax error detected at line %d ! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
+                        exit(EXIT_FAILURE);
+                    }
+
+                    if (directory_exist(next_line, filename) == 0)
+                    {
+                        fprintf(stderr, "%s is not a valid path because the directory does not exist ! This is not a valid notes file. Please remove the notes file and run the program again\n", next_line);
                         exit(EXIT_FAILURE);
                     }
 
