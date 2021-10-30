@@ -161,14 +161,14 @@ int list(char *filename)
                 dir_name[0] = '\0';
 
                 permissions[0] = '-';
-                int hard_links = 1;
+                char hard_links[] = "  1";
                 int size = count_lines(next_line, filename);
 
                 for (int i = 0; i < MAX_ATTR_LENGTH; i++)
                 {
                     printf("%c", permissions[i]);
                 }
-                printf(" %d %s %s %d %s ", hard_links, owners, groups, size, date);
+                printf(" %s %s %s %d %s ", hard_links, owners, groups, size, date);
 
                 for (int i = 0; i < MAX_ATTR_LENGTH; i++)
                 {
