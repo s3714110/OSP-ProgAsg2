@@ -106,7 +106,7 @@ int directory_exist(char *name, char *filename)
         {
             char dir_of_file[MAX_LINE_LENGTH] = {0};
             strncpy(dir_of_file, temp_path, index_of_slash + 1);
-            dir_of_file[0] = '=';
+            
 
             if ((temp_file = fopen(filename, "r")))
             {

@@ -6,6 +6,7 @@
 #include <errno.h>
 #include "init.h"
 #include "list.h"
+#include "mkdir.h"
 
 #define MenuBreakTime 1
 #define DefaultFilesystemName "FS.notes"
