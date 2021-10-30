@@ -6,22 +6,6 @@
 
 #define MAX_LINE_LENGTH 255
 
-int id_check(char *id)
-{
-    int valid = 0;
-
-    if ((strcmp(id, ".") != 0) && (strcmp(id, "..") != 0) && (strcmp(id, "/") != 0))
-    {
-        valid = 1;
-    }
-
-    else
-    {
-        valid = 0;
-    }
-
-    return valid;
-}
 int count_slash(char *dir_name)
 {
     int slashes = 0;
@@ -120,48 +104,41 @@ int make_dir(char *filename, char *id)
 {
     if (strlen(id) <= MAX_LINE_LENGTH - 3)
     {
-        if (id_check(id) == 1)
+
+        char dir_name[MAX_LINE_LENGTH] = {0};
+        dir_name[0] = '=';
+        if (id[0] == '/')
         {
-            char dir_name[MAX_LINE_LENGTH] = {0};
-            dir_name[0] = '=';
-            if (id[0] == '/')
-            {
-                strncpy(dir_name + 1, id + 1, strlen(id));
-            }
-            else
-            {
-                strncpy(dir_name + 1, id, strlen(id));
-            }
+            strncpy(dir_name + 1, id + 1, strlen(id));
+        }
+        else
+        {
+            strncpy(dir_name + 1, id, strlen(id));
+        }
 
-            if (dir_name[strcspn(dir_name, "\0") - 1] != '/')
-            {
-                dir_name[strcspn(dir_name, "\0")] = '/';
-            }
+        if (dir_name[strcspn(dir_name, "\0") - 1] != '/')
+        {
+            dir_name[strcspn(dir_name, "\0")] = '/';
+        }
 
-            if (duplicate_directory(dir_name, filename) == 0)
-            {
-                int number_of_slashes = count_slash(dir_name);
-                int last_slash_index = 0;
+        if (duplicate_directory(dir_name, filename) == 0)
+        {
+            int number_of_slashes = count_slash(dir_name);
+            int last_slash_index = 0;
 
-                for (int i = 0; i < number_of_slashes; i++)
-                {
-                    int current_slash_index = index_of_next_slash(dir_name, last_slash_index);
-                    char temp_dir[MAX_LINE_LENGTH] = {0};
-                    strncpy(temp_dir, dir_name, current_slash_index + 1);
-                    append_directory(temp_dir, filename);
-
-                    last_slash_index = current_slash_index;
-                }
-            }
-            else
+            for (int i = 0; i < number_of_slashes; i++)
             {
-                fprintf(stderr, "Error! The given directory already exists in the filesystem. Please try again!\n");
-                exit(EXIT_FAILURE);
+                int current_slash_index = index_of_next_slash(dir_name, last_slash_index);
+                char temp_dir[MAX_LINE_LENGTH] = {0};
+                strncpy(temp_dir, dir_name, current_slash_index + 1);
+                append_directory(temp_dir, filename);
+
+                last_slash_index = current_slash_index;
             }
         }
         else
         {
-            fprintf(stderr, "Error! There is a syntax error with given directory name. Please try again!\n");
+            fprintf(stderr, "Error! The given directory already exists in the filesystem. Please try again!\n");
             exit(EXIT_FAILURE);
         }
     }

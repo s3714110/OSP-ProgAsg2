@@ -31,6 +31,18 @@ int file_name_check(char *name)
     return valid;
 }
 
+int dir_name_check(char *name)
+{
+    int valid = 0;
+
+    if ((strcmp(name, ".") != 0) && (strcmp(name, "..") != 0) && (strcmp(name, "/") != 0))
+    {
+        valid = 1;
+    }
+
+    return valid;
+}
+
 int make_recursive_path(char *path, mode_t mode)
 {
     assert(path && *path);
@@ -130,6 +142,12 @@ int main(int argc, char *argv[])
         {
             if (argc == 4)
             {
+                if (dir_name_check(argv[3]) == 0)
+                {
+                    fprintf(stderr, "Error! There is a syntax error with given directory name. Please try again!\n");
+                    exit(EXIT_FAILURE);
+                }
+
                 init(argv[2]);
                 fprintf(stdout, "VSFS is now running mkdir to create directory %s for filesystem %s...\n", argv[3], argv[2]);
                 sleep(MenuBreakTime);
