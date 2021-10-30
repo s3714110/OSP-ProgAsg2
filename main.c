@@ -174,6 +174,7 @@ int main(int argc, char *argv[])
                 init(argv[2]);
                 fprintf(stdout, "VSFS is now running rm function...\n");
                 sleep(MenuBreakTime);
+                remove_file(argv[2], argv[3]);
             }
 
             else
@@ -195,6 +196,7 @@ int main(int argc, char *argv[])
                 init(argv[2]);
                 fprintf(stdout, "VSFS is now running rmdir function...\n");
                 sleep(MenuBreakTime);
+                remove_dir(argv[2], argv[3]);
             }
 
             else
