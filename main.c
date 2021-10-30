@@ -12,6 +12,7 @@
 #include "list.h"
 #include "mkdir.h"
 #include "rm.h"
+#include "defrag.h"
 
 #define MenuBreakTime 0
 #define DefaultFilesystemName "FS.notes"
