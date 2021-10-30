@@ -4,8 +4,10 @@
 #include <string.h>
 #include <dirent.h>
 #include <errno.h>
+#include <assert.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
 #include "init.h"
 #include "list.h"
 #include "mkdir.h"
@@ -29,10 +31,38 @@ int fs_check(char *fs)
     return valid;
 }
 
-void create_directory(char *path_name)
+int make_recursive_path(char *path, mode_t mode)
+{
+    assert(path && *path);
+    for (char *p = strchr(path + 1, '/'); p; p = strchr(p + 1, '/'))
+    {
+        *p = '\0';
+        if (mkdir(path, mode) == -1)
+        {
+            if (errno != EEXIST)
+            {
+                *p = '/';
+                return -1;
+            }
+            else
+            {
+                printf("Path %s already exists. No need to be automatically created\n", path);
+            }
+        }
+        else
+        {
+            printf("Path %s has been automatically created.\n", path);
+        }
+        *p = '/';
+    }
+    return 0;
+}
+
+int create_directory(char *path_name)
 {
     char dir_name[MAX_PATH_LENGTH] = {0};
     int index_of_slash = -1;
+    int error_code = 0;
 
     for (int i = 0; i <= strlen(path_name); i++)
     {
@@ -45,14 +75,11 @@ void create_directory(char *path_name)
     if (index_of_slash != -1)
     {
         strncpy(dir_name, path_name, index_of_slash + 1);
-        struct stat st = {0};
-
-        if (stat(dir_name, &st) == -1)
-        {
-            printf("Path %s not found. Creating %s ...\n", dir_name, dir_name);
-            mkdir(dir_name, 0777);
-        }
+        printf("Checking path %s and creating any intermediate directories as needed...\n", dir_name);
+        error_code = make_recursive_path(dir_name, 0777);
     }
+
+    return error_code;
 }
 
 int main(int argc, char *argv[])
@@ -68,7 +95,12 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
 
-        create_directory(argv[2]);
+        if (create_directory(argv[2]) != 0)
+        {
+            fprintf(stderr, "Error! Path to note file can not be accessed or created. Please try again\n");
+            exit(EXIT_FAILURE);
+        }
+
         if (strcmp(argv[1], "list") == 0)
         {
             if (argc == 3)

@@ -234,10 +234,17 @@ int init(char *filename)
     else
     {
         printf("Notes file not detected. Creating a new notes files...\n");
-        file = fopen(filename, "w");
+        if((file = fopen(filename, "w")))
+        {
         fprintf(file, "%s\n", ValidFileCheck);
         fclose(file);
-        printf("New file created\n");
+        printf("Note file %s created.\n", filename);
+        }
+        else 
+        {
+            fprintf(stderr, "Error! Can not access or create the note file. Please try again\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
     return EXIT_SUCCESS;
