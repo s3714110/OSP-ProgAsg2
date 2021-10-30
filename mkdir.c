@@ -104,6 +104,11 @@ void append_directory(char *dir_name, char *filename)
             fclose(file);
             printf("Directory %s is created\n", output_dir);
         }
+        else
+        {
+            fprintf(stderr, "Error! Can not access or create the note file. Please try again\n");
+            exit(EXIT_FAILURE);
+        }
     }
     else
     {

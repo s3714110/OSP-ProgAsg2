@@ -203,6 +203,11 @@ int list(char *filename)
         }
         fclose(file);
     }
+    else
+    {
+        fprintf(stderr, "Error! Can not access or create the note file. Please try again\n");
+        exit(EXIT_FAILURE);
+    }
 
     return EXIT_SUCCESS;
 }
