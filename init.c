@@ -242,7 +242,7 @@ int init(char *filename)
         }
         else 
         {
-            fprintf(stderr, "Error! Can not access or create the note file. Please try again\n");
+            fprintf(stderr, "Error! Can not access or create the notes file. Please try again\n");
             exit(EXIT_FAILURE);
         }
     }

@@ -106,7 +106,7 @@ void append_directory(char *dir_name, char *filename)
         }
         else
         {
-            fprintf(stderr, "Error! Can not access or modify the note file. Please try again\n");
+            fprintf(stderr, "Error! Can not access or modify the notes file. Please try again\n");
             exit(EXIT_FAILURE);
         }
     }
