@@ -100,20 +100,20 @@ void append_directory(char *dir_name, char *filename)
     }
 }
 
-int make_dir(char *filename, char *id)
+int make_dir(char *filename, char *id_name)
 {
-    if (strlen(id) <= MAX_LINE_LENGTH - 3)
+    if (strlen(id_name) <= MAX_LINE_LENGTH - 3)
     {
 
         char dir_name[MAX_LINE_LENGTH] = {0};
         dir_name[0] = '=';
-        if (id[0] == '/')
+        if (id_name[0] == '/')
         {
-            strncpy(dir_name + 1, id + 1, strlen(id));
+            strncpy(dir_name + 1, id_name + 1, strlen(id_name));
         }
         else
         {
-            strncpy(dir_name + 1, id, strlen(id));
+            strncpy(dir_name + 1, id_name, strlen(id_name));
         }
 
         if (dir_name[strcspn(dir_name, "\0") - 1] != '/')

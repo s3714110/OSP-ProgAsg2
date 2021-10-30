@@ -11,6 +11,7 @@
 #include "init.h"
 #include "list.h"
 #include "mkdir.h"
+#include "rm.h"
 
 #define MenuBreakTime 0
 #define DefaultFilesystemName "FS.notes"
@@ -164,6 +165,12 @@ int main(int argc, char *argv[])
         {
             if (argc == 4)
             {
+                if (file_name_check(argv[3]) == 0)
+                {
+                    fprintf(stderr, "Error! There is a syntax error with given file name. Please try again!\n");
+                    exit(EXIT_FAILURE);
+                }
+
                 init(argv[2]);
                 fprintf(stdout, "VSFS is now running rm function...\n");
                 sleep(MenuBreakTime);
@@ -179,6 +186,12 @@ int main(int argc, char *argv[])
         {
             if (argc == 4)
             {
+                if (dir_name_check(argv[3]) == 0)
+                {
+                    fprintf(stderr, "Error! There is a syntax error with given directory name. Please try again!\n");
+                    exit(EXIT_FAILURE);
+                }
+
                 init(argv[2]);
                 fprintf(stdout, "VSFS is now running rmdir function...\n");
                 sleep(MenuBreakTime);
