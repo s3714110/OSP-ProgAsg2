@@ -238,7 +238,7 @@ int init(char *filename)
         {
         fprintf(file, "%s\n", ValidFileCheck);
         fclose(file);
-        printf("Note file %s created.\n", filename);
+        printf("Notes file %s created.\n", filename);
         }
         else 
         {

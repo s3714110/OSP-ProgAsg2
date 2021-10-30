@@ -16,13 +16,13 @@
 #define DefaultFilesystemName "FS.notes"
 #define MAX_PATH_LENGTH 255
 
-int fs_check(char *fs)
+int file_name_check(char *name)
 {
     int valid = 0;
 
-    if ((fs[strlen(fs) - 1] != '/'))
+    if ((name[strlen(name) - 1] != '/'))
     {
-        if ((strcmp(fs, ".") != 0) && (strcmp(fs, "..") != 0) && (strcmp(fs, "/") != 0))
+        if ((strcmp(name, ".") != 0) && (strcmp(name, "..") != 0) && (strcmp(name, "/") != 0))
         {
             valid = 1;
         }
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 
     if (argc >= 3)
     {
-        if (fs_check(argv[2]) == 0)
+        if (file_name_check(argv[2]) == 0)
         {
             fprintf(stderr, "Error! Invalid path to notes file. Please try again\n");
             exit(EXIT_FAILURE);
