@@ -8,12 +8,36 @@
 
 int count_slash(char *dir_name)
 {
+    int slashes = 0;
+    char temp_path[MAX_LINE_LENGTH] = {0};
+    strncpy(temp_path, dir_name, MAX_LINE_LENGTH);
 
+    for (int i = 0; i <= strlen(temp_path); i++)
+    {
+        if (temp_path[i] == '/')
+        {
+            slashes++;
+        }
+    }
+
+    return slashes;
 }
 
 int index_of_last_slash(char *dir_name)
 {
+    int last_slash = 0;
+    char temp_path[MAX_LINE_LENGTH] = {0};
+    strncpy(temp_path, dir_name, MAX_LINE_LENGTH);
 
+    for (int i = 0; i <= strlen(temp_path); i++)
+    {
+        if (temp_path[i] == '/')
+        {
+            last_slash = i;
+        }
+    }
+
+    return last_slash;
 }
 
 int duplicate_directory(char *dir_name, char *filename)
@@ -40,6 +64,30 @@ int duplicate_directory(char *dir_name, char *filename)
     }
 
     return is_duplicate;
+}
+
+int append_directory(char *dir_name, char *filename)
+{
+    if (duplicate_directory(dir_name, filename) == 0)
+    {
+        FILE *file;
+
+        if ((file = fopen(filename, "a")))
+        {
+            char new_line[MAX_LINE_LENGTH] = {0};
+            strncpy(new_line, dir_name, MAX_LINE_LENGTH);
+
+            new_line[strcspn(new_line, "\0")] = '\n';
+
+            for(int i = 0; i < MAX_LINE_LENGTH; i++)
+            {
+                fputc(new_line[i], file);
+            }
+
+            fclose(file);
+
+        }
+    }
 }
 
 int mkdir(char *filename, char *id)
