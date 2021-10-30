@@ -2,7 +2,7 @@ CFLAGS = -g -Wall
 CC = gcc
 LIBS =
 TARGET = VSFS
-SOURCES = init.c list.c mkdir.c rm.c
+SOURCES = init.c list.c mkdir.c rm.c defrag.c
 OBJECTS = $(SOURCES:.c=.o)
 HEADERS = $(SOURCES:.c=.h)
 RM = rm -f

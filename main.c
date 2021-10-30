@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
                 }
 
                 init(argv[2]);
-                fprintf(stdout, "VSFS is now running rm function...\n");
+                fprintf(stdout, "VSFS is now running rm to remove file %s for filesystem %s ...\n",argv[3], argv[2]);
                 sleep(MenuBreakTime);
                 remove_file(argv[2], argv[3]);
             }
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
                 }
 
                 init(argv[2]);
-                fprintf(stdout, "VSFS is now running rmdir function...\n");
+                fprintf(stdout, "VSFS is now running rmdir to remove directory %s for filesystem %s ...\n",argv[3], argv[2]);
                 sleep(MenuBreakTime);
                 remove_dir(argv[2], argv[3]);
             }
@@ -207,8 +207,19 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[1], "defrag") == 0)
         {
-            fprintf(stdout, "VSFS is now running defrag function...\n");
-            sleep(MenuBreakTime);
+
+            if (argc == 3)
+            {
+                init(argv[2]);
+                fprintf(stdout, "VSFS is now running defrag function for filesystem %s ...\n", argv[2]);
+                sleep(MenuBreakTime);
+                defrag(argv[2]);
+            }
+            else
+            {
+                fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
+                exit(EXIT_FAILURE);
+            }
         }
         else if (strcmp(argv[1], "index") == 0)
         {
