@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    fprintf(stderr, "Invalid format. Please refer to the documentations for list of arguments\n");
+                    fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
                     exit(EXIT_FAILURE);
                 }
             }
@@ -82,6 +82,7 @@ int main(int argc, char *argv[])
             {
                 if (argc == 4)
                 {
+                    init(argv[2]);
                     fprintf(stdout, "VSFS is now running mkdir to create directory %s for filesystem %s...\n", argv[3], argv[2]);
                     sleep(MenuBreakTime);
                     mkdir(argv[2], argv[3]);
@@ -89,7 +90,7 @@ int main(int argc, char *argv[])
 
                 else
                 {
-                    fprintf(stderr, "Invalid format. Please refer to the documentations for list of arguments\n");
+                    fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
                     exit(EXIT_FAILURE);
                 }
             }
@@ -116,20 +117,20 @@ int main(int argc, char *argv[])
 
             else
             {
-                fprintf(stderr, "Invalid argument. Please refer to the documentations for list of arguments\n");
+                fprintf(stderr, "Error! Invalid argument. Please refer to the documentations for list of arguments\n");
                 exit(EXIT_FAILURE);
             }
         }
         else
         {
-            fprintf(stderr, "Directory does not exist. Please check the path and run the program again\n");
+            fprintf(stderr, "Error! Directory does not exist. Please check the path and run the program again\n");
             exit(EXIT_FAILURE);
         }
     }
 
     else
     {
-        fprintf(stderr, "Program is missing arguments. Please refer to the documentations for list of arguments\n");
+        fprintf(stderr, "Error! Program is missing arguments. Please refer to the documentations for list of arguments\n");
         exit(EXIT_FAILURE);
     }
 
