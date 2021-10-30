@@ -84,6 +84,7 @@ int main(int argc, char *argv[])
                 {
                     fprintf(stdout, "VSFS is now running mkdir to create directory %s for filesystem %s...\n", argv[3], argv[2]);
                     sleep(MenuBreakTime);
+                    mkdir(argv[2], argv[3]);
                 }
 
                 else

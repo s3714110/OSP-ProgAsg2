@@ -66,7 +66,7 @@ int duplicate_directory(char *dir_name, char *filename)
     return is_duplicate;
 }
 
-int append_directory(char *dir_name, char *filename)
+void append_directory(char *dir_name, char *filename)
 {
     if (duplicate_directory(dir_name, filename) == 0)
     {
@@ -79,19 +79,50 @@ int append_directory(char *dir_name, char *filename)
 
             new_line[strcspn(new_line, "\0")] = '\n';
 
-            for(int i = 0; i < MAX_LINE_LENGTH; i++)
+            for (int i = 0; i < MAX_LINE_LENGTH; i++)
             {
                 fputc(new_line[i], file);
             }
 
             fclose(file);
-
         }
     }
 }
 
 int mkdir(char *filename, char *id)
 {
+    if (strlen(id) <= MAX_LINE_LENGTH - 3)
+    {
+        if (id[0] != '/')
+        {
+            char dir_name[MAX_LINE_LENGTH] = {0};
+            dir_name[0] = '=';
+            strncpy(dir_name + 1, id, strlen(id));
+            if (dir_name[strcspn(dir_name, "\0") - 1] != '/')
+            {
+                dir_name[strcspn(dir_name, "\0")] = '/';
+            }
 
+            if (duplicate_directory(dir_name, filename) == 0)
+            {
+            }
+            else
+            {
+                fprintf(stderr, "The given directory already exists in the filesystem. Please try again!");
+                exit(EXIT_FAILURE);
+            }
+            printf("Input id is: %s", dir_name);
+        }
+        else
+        {
+            fprintf(stderr, "Error! The directory name can not start with /. Please try again!");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else
+    {
+        fprintf(stderr, "The given directory name exceeds the maximum length. Please try again!");
+        exit(EXIT_FAILURE);
+    }
     return EXIT_SUCCESS;
 }
