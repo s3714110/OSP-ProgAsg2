@@ -111,7 +111,7 @@ void append_directory(char *dir_name, char *filename)
     }
 }
 
-int mkdir(char *filename, char *id)
+int make_dir(char *filename, char *id)
 {
     if (strlen(id) <= MAX_LINE_LENGTH - 3)
     {
