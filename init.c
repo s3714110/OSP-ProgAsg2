@@ -224,7 +224,7 @@ int init(char *filename)
         }
         else
         {
-            fprintf(stderr, "Error! Notes indentifier not found! This is not a valid notes file. Please remove the notes file and run the program again\n");
+            fprintf(stderr, "Error! Notes identifier not found! This is not a valid notes file. Please remove the notes file and run the program again\n");
             exit(EXIT_FAILURE);
         }
 

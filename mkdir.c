@@ -6,6 +6,22 @@
 
 #define MAX_LINE_LENGTH 255
 
+int id_check(char *id)
+{
+    int valid = 0;
+
+    if ((strcmp(id, ".") != 0) && (strcmp(id, "..") != 0) && (strcmp(id, "/") != 0))
+    {
+        valid = 1;
+    }
+
+    else
+    {
+        valid = 0;
+    }
+
+    return valid;
+}
 int count_slash(char *dir_name)
 {
     int slashes = 0;
@@ -99,11 +115,19 @@ int mkdir(char *filename, char *id)
 {
     if (strlen(id) <= MAX_LINE_LENGTH - 3)
     {
-        if (id[0] != '/')
+        if (id_check(id) == 1)
         {
             char dir_name[MAX_LINE_LENGTH] = {0};
             dir_name[0] = '=';
-            strncpy(dir_name + 1, id, strlen(id));
+            if (id[0] == '/')
+            {
+                strncpy(dir_name + 1, id + 1, strlen(id));
+            }
+            else
+            {
+                strncpy(dir_name + 1, id, strlen(id));
+            }
+
             if (dir_name[strcspn(dir_name, "\0") - 1] != '/')
             {
                 dir_name[strcspn(dir_name, "\0")] = '/';
@@ -132,7 +156,7 @@ int mkdir(char *filename, char *id)
         }
         else
         {
-            fprintf(stderr, "Error! The directory name can not start with /. Please try again!\n");
+            fprintf(stderr, "Error! There is a syntax error with given directory name. Please try again!\n");
             exit(EXIT_FAILURE);
         }
     }

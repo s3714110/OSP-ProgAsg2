@@ -8,7 +8,7 @@
 #include "list.h"
 #include "mkdir.h"
 
-#define MenuBreakTime 1
+#define MenuBreakTime 0
 #define DefaultFilesystemName "FS.notes"
 #define MAX_PATH_LENGTH 255
 
