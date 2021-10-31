@@ -215,6 +215,7 @@ int main(int argc, char *argv[])
                 fprintf(stdout, "VSFS is now running defrag function for filesystem %s ...\n", argv[2]);
                 sleep(MenuBreakTime);
                 defrag(argv[2]);
+                sort(argv[2]);
             }
             else
             {
