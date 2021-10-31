@@ -72,7 +72,7 @@ int defrag(char *filename)
     return EXIT_SUCCESS;
 }
 
-int sort(char *filename)
+void sort_by_slashes(char *filename)
 {
     FILE *file;
     FILE *buffer_file;
@@ -101,6 +101,28 @@ int sort(char *filename)
                     strncpy(temp_line, next_line, MAX_LINE_LENGTH);
                     temp_line[strcspn(temp_line, "\n")] = '\0';
 
+                    if ( (temp_line[0] == '='))
+                    {
+                        if (slash_counter(temp_line) == number_of_slash)
+                        {
+                            fputs(temp_line, buffer_file);
+                            fputc('\n', buffer_file);
+                            found = true;
+                        }
+                    }
+                }
+            }
+            fclose(file);
+
+            if ((file = fopen(filename, "r")))
+            {
+                fgets(next_line, MAX_LINE_LENGTH, file);
+                while (fgets(next_line, MAX_LINE_LENGTH, file))
+                {
+                    char temp_line[MAX_LINE_LENGTH] = {0};
+                    strncpy(temp_line, next_line, MAX_LINE_LENGTH);
+                    temp_line[strcspn(temp_line, "\n")] = '\0';
+
                     if (reading_a_file == true)
                     {
                         if (temp_line[0] == ' ')
@@ -114,7 +136,7 @@ int sort(char *filename)
                         }
                     }
 
-                    if (temp_line[0] == '@')
+                    if ( (temp_line[0] == '@'))
                     {
                         if (slash_counter(temp_line) == number_of_slash)
                         {
@@ -126,21 +148,48 @@ int sort(char *filename)
                     }
                 }
             }
+            fclose(file);
 
             number_of_slash++;
-            fclose(file);
+
             if (!found)
             {
                 searching = false;
             }
         }
         fclose(buffer_file);
+        /* if (remove(filename) == 0)
+        {
+            if (rename(BufferFileName, filename) == 0)
+            {
+                printf("Filesystem %s has been sorted by slashes.\n", filename);
+            }
+            else
+            {
+                fprintf(stderr, "Error! Can not make changes to the buffer file. Please try again\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+        else
+        {
+            fprintf(stderr, "Error! Can not make changes to the notes file. Please try again\n");
+            exit(EXIT_FAILURE);
+        } */
     }
     else
     {
         fprintf(stderr, "Error! Can not access or modify the notes or buffer file. Please try again\n");
         exit(EXIT_FAILURE);
     }
+}
 
+void sort_by_dirs_files(char *filename)
+{
+    
+
+}
+int sort(char *filename)
+{
+    sort_by_slashes(filename);
     return EXIT_SUCCESS;
 }
