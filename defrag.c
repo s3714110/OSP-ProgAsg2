@@ -158,7 +158,7 @@ void sort_by_slashes(char *filename)
             }
         }
         fclose(buffer_file);
-        /* if (remove(filename) == 0)
+        if (remove(filename) == 0)
         {
             if (rename(BufferFileName, filename) == 0)
             {
@@ -174,7 +174,7 @@ void sort_by_slashes(char *filename)
         {
             fprintf(stderr, "Error! Can not make changes to the notes file. Please try again\n");
             exit(EXIT_FAILURE);
-        } */
+        }
     }
     else
     {
