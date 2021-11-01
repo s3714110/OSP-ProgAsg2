@@ -10,6 +10,7 @@
 #include "base64.h"
 
 #define MAX_LINE_LENGTH 255
+#define TempFileExtention ".temp"
 
 int index_of_last_slash(char *name)
 {
@@ -273,20 +274,20 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
                 fputs(internal_file_name, file);
                 fputc('\n', file);
 
-                char *text_to_string = 0;
+                char *file_to_string = 0;
                 long length;
 
                 fseek(external_file, 0, SEEK_END);
                 length = ftell(external_file);
                 fseek(external_file, 0, SEEK_SET);
-                text_to_string = malloc(length);
-                if (text_to_string)
+                file_to_string = malloc(length);
+                if (file_to_string)
                 {
-                    fread(text_to_string, 1, length, external_file);
+                    fread(file_to_string, 1, length, external_file);
                 }
 
-                char encoded_data[Base64encode_len(strlen(text_to_string))];
-                Base64encode(encoded_data, text_to_string, strlen(text_to_string));
+                char encoded_data[Base64encode_len(strlen(file_to_string))];
+                Base64encode(encoded_data, file_to_string, strlen(file_to_string));
 
                 int encoded_lines = (strlen(encoded_data) / (MAX_LINE_LENGTH - 3)) + 1;
 
@@ -301,7 +302,7 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
                 }
 
                 fclose(external_file);
-                free(text_to_string);
+                free(file_to_string);
             }
             else
             {
@@ -310,7 +311,142 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
             }
 
             fclose(file);
-            printf("Content of external file %s has been copied into internal file %s on the filesystem %s\n", ef_name, if_name, filename);
+            printf("Content of external file %s has been encoded and copied into internal file %s on the filesystem %s\n", ef_name, if_name, filename);
+        }
+        else
+        {
+            fprintf(stderr, "Error! Can not access notes file. Please try again\n");
+            exit(EX_NOINPUT);
+        }
+    }
+    else
+    {
+        fprintf(stderr, "Error! The given internal file name exceeds the maximum length. Please try again!\n");
+        exit(EX_DATAERR);
+    }
+    return EXIT_SUCCESS;
+}
+
+int copy_out_b64(char *filename, char *if_name, char *ef_name)
+{
+    if (strlen(if_name) <= MAX_LINE_LENGTH - 3)
+    {
+        char internal_file_name[MAX_LINE_LENGTH] = {0};
+        internal_file_name[0] = '@';
+
+        if (if_name[0] == '/')
+        {
+            strncpy(internal_file_name + 1, if_name + 1, strlen(if_name));
+        }
+        else
+        {
+            strncpy(internal_file_name + 1, if_name, strlen(if_name));
+        }
+
+        if (check_exist(internal_file_name, filename) == 0)
+        {
+            fprintf(stderr, "Error! The given internal file can not be found on filesystem %s . Please try again!\n", filename);
+            exit(EX_UNAVAILABLE);
+        }
+
+        char temp_external_filename[MAX_LINE_LENGTH] = {0};
+        strncpy(temp_external_filename, ef_name, strlen(ef_name));
+        strcat(temp_external_filename, TempFileExtention);
+
+        FILE *file;
+        FILE *temp_external_file;
+        bool reading_a_file = false;
+
+        if ((file = fopen(filename, "r")))
+        {
+            if ((temp_external_file = fopen(temp_external_filename, "w+")))
+            {
+                char next_internal_line[MAX_LINE_LENGTH] = {0};
+
+                while (fgets(next_internal_line, MAX_LINE_LENGTH, file))
+                {
+                    next_internal_line[strcspn(next_internal_line, "\n")] = '\0';
+
+                    if (reading_a_file == true)
+                    {
+                        if (next_internal_line[0] == ' ')
+                        {
+                            char next_external_line[MAX_LINE_LENGTH - 3] = {0};
+                            strncpy(next_external_line, next_internal_line + 1, strlen(next_internal_line));
+                            fputs(next_external_line, temp_external_file);
+                        }
+                        else
+                        {
+                            reading_a_file = false;
+                        }
+                    }
+
+                    if (next_internal_line[0] == '@')
+                    {
+                        if (strcmp(next_internal_line, internal_file_name) == 0)
+                        {
+                            reading_a_file = true;
+                        }
+                    }
+                }
+
+                fclose(temp_external_file);
+
+                char *file_to_string = 0;
+                long length;
+
+                if ((temp_external_file = fopen(temp_external_filename, "r")))
+                {
+                    fseek(temp_external_file, 0, SEEK_END);
+                    length = ftell(temp_external_file);
+                    fseek(temp_external_file, 0, SEEK_SET);
+                    file_to_string = malloc(length);
+                    if (file_to_string)
+                    {
+                        fread(file_to_string, 1, length, temp_external_file);
+                    }
+
+                    fclose(temp_external_file);
+
+                    char decoded_data[Base64decode_len(file_to_string)];
+                    Base64decode(decoded_data, file_to_string);
+                    FILE *external_file;
+                    if ((external_file = fopen(ef_name, "w+")))
+                    {
+                        fputs(decoded_data, external_file);
+                        fclose(external_file);
+                    }
+
+                    else
+                    {
+                        fprintf(stderr, "Error! Can not create or modify external file. Please try again\n");
+                        exit(EX_CANTCREAT);
+                    }
+                }
+
+                else
+                {
+                    fprintf(stderr, "Error! Can not access temp file. Please try again\n");
+                    exit(EX_NOINPUT);
+                }
+
+                if (remove(temp_external_filename) != 0)
+                {
+
+                    fprintf(stderr, "Error! Can not make changes to the temp file. Please try again\n");
+                    exit(EX_IOERR);
+                }
+
+                free(file_to_string);
+            }
+            else
+            {
+                fprintf(stderr, "Error! Can not create or modify temp file. Please try again\n");
+                exit(EX_CANTCREAT);
+            }
+
+            fclose(file);
+            printf("Encoded content of internal file %s on the filesystem %s has been decoded and copied out to externel file %s \n", if_name, filename, ef_name);
         }
         else
         {

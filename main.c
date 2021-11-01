@@ -160,7 +160,67 @@ int main(int argc, char *argv[])
                 exit(EX_USAGE);
             }
         }
+        else if (strcmp(argv[1], "copyin_plain") == 0)
+        {
+            if (argc == 5)
+            {
+                if (file_name_check(argv[3]) == 0)
+                {
+                    fprintf(stderr, "Error! Invalid path to external file. Please try again\n");
+                    exit(EX_DATAERR);
+                }
+
+                if (file_name_check(argv[4]) == 0)
+                {
+                    fprintf(stderr, "Error! There is a syntax error with internal file name. Please try again!\n");
+                    exit(EX_DATAERR);
+                }
+
+                init(argv[2]);
+                fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3],argv[4],argv[2]);
+                sleep(MenuBreakTime);
+                copy_in(argv[2], argv[3], argv[4]);
+            }
+            else
+            {
+                fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
+                exit(EX_USAGE);
+            }
+        }
         else if (strcmp(argv[1], "copyout") == 0)
+        {
+            if (argc == 5)
+            {
+                if (file_name_check(argv[3]) == 0)
+                {
+                    fprintf(stderr, "Error! There is a syntax error with internal file name. Please try again!\n");
+                    exit(EX_DATAERR);
+                }
+
+                if (file_name_check(argv[4]) == 0)
+                {
+                    fprintf(stderr, "Error! Invalid path to external file. Please try again\n");
+                    exit(EX_DATAERR);
+                }
+
+                if (create_directory(argv[4]) != 0)
+                {
+                    fprintf(stderr, "Error! Path to external file can not be accessed or created. Please try again\n");
+                    exit(EX_CANTCREAT);
+                }
+
+                init(argv[2]);
+                fprintf(stdout, "VSFS is now running copyout to copy internal file %s on filesytem %s out to external file %s...\n\n",argv[3],argv[2],argv[4]);
+                sleep(MenuBreakTime);
+                copy_out_b64(argv[2], argv[3], argv[4]);
+            }
+            else
+            {
+                fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
+                exit(EX_USAGE);
+            }
+        }
+        else if (strcmp(argv[1], "copyout_plain") == 0)
         {
             if (argc == 5)
             {

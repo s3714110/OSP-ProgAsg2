@@ -63,3 +63,4 @@ VSFS
 *.o
 *.notes
 *.index
+*.temp
