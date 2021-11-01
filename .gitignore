@@ -62,3 +62,4 @@ dkms.conf
 VSFS
 *.o
 *.notes
+*.index
