@@ -7,14 +7,13 @@
 #define IndexFileExtension ".index"
 #define MAX_LINE_LENGTH 255
 
-
 int create_index(char *filename)
 {
     char index_filename[MAX_LINE_LENGTH] = {0};
     strncpy(index_filename, filename, strlen(filename));
 
     strcat(index_filename, IndexFileExtension);
-    
+
     FILE *file;
     FILE *index_file;
     int line_count = 0;
@@ -54,7 +53,7 @@ int create_index(char *filename)
         fclose(index_file);
         printf("Index file %s created.\n", index_filename);
     }
-    else 
+    else
     {
         fprintf(stderr, "Error! Can not read or access files. Please try again\n");
         exit(EXIT_FAILURE);
@@ -62,3 +61,46 @@ int create_index(char *filename)
     return EXIT_SUCCESS;
 }
 
+int read_index(char *filename)
+{
+    char index_filename[MAX_LINE_LENGTH] = {0};
+    strncpy(index_filename, filename, strlen(filename));
+    strcat(index_filename, IndexFileExtension);
+
+    FILE *index_file;
+    if ((index_file = fopen(index_filename, "r")))
+    {
+        printf("Reading index file %s ...\n\n", index_filename);
+        char next_line[MAX_LINE_LENGTH] = {0};
+        while (fgets(next_line, MAX_LINE_LENGTH, index_file))
+        {
+            next_line[strcspn(next_line, "\n")] = '\0';
+            char entry_name[MAX_LINE_LENGTH] = {0};
+            strncpy(entry_name, next_line, MAX_LINE_LENGTH);
+
+            if (next_line[0] == '@')
+            {
+                fgets(next_line, MAX_LINE_LENGTH, index_file);
+                next_line[strcspn(next_line, "\n")] = '\0';
+
+                printf("File %s starts at line %s\n", entry_name + 1, next_line + 1);
+            }
+            else if (next_line[0] == '=')
+            {
+                fgets(next_line, MAX_LINE_LENGTH, index_file);
+                next_line[strcspn(next_line, "\n")] = '\0';
+
+                printf("Directory %s starts at line %s\n", entry_name + 1, next_line + 1);
+            }
+        }
+
+        fclose(index_file);
+    }
+    else
+    {
+        fprintf(stderr, "Error! Can not read or access index files. Please try again\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return EXIT_SUCCESS;
+}

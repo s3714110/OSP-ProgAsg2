@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
             if (argc == 3)
             {
                 init(argv[2]);
-                fprintf(stdout, "VSFS is now running list function for filesystem %s ...\n", argv[2]);
+                fprintf(stdout, "VSFS is now running list function for filesystem %s ...\n\n", argv[2]);
                 sleep(MenuBreakTime);
                 list(argv[2]);
             }
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
                 }
 
                 init(argv[2]);
-                fprintf(stdout, "VSFS is now running mkdir to create directory %s for filesystem %s...\n", argv[3], argv[2]);
+                fprintf(stdout, "VSFS is now running mkdir to create directory %s for filesystem %s...\n\n", argv[3], argv[2]);
                 sleep(MenuBreakTime);
                 make_dir(argv[2], argv[3]);
             }
@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
                 }
 
                 init(argv[2]);
-                fprintf(stdout, "VSFS is now running rm to remove file %s for filesystem %s ...\n", argv[3], argv[2]);
+                fprintf(stdout, "VSFS is now running rm to remove file %s for filesystem %s ...\n\n", argv[3], argv[2]);
                 sleep(MenuBreakTime);
                 remove_file(argv[2], argv[3]);
             }
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
             {
                 if (dir_name_check(argv[3]) == 0)
                 {
-                    fprintf(stderr, "Error! There is a syntax error with given directory name. Please try again!\n");
+                    fprintf(stderr, "Error! There is a syntax error with given directory name. Please try again!\n\n");
                     exit(EXIT_FAILURE);
                 }
 
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
             if (argc == 3)
             {
                 init(argv[2]);
-                fprintf(stdout, "VSFS is now running defrag function for filesystem %s ...\n", argv[2]);
+                fprintf(stdout, "VSFS is now running defrag function for filesystem %s ...\n\n", argv[2]);
                 sleep(MenuBreakTime);
                 defrag(argv[2]);
                 sort(argv[2]);
@@ -229,9 +229,10 @@ int main(int argc, char *argv[])
             if (argc == 3)
             {
                 init(argv[2]);
-                fprintf(stdout, "VSFS is now running index function for filesystem %s ...\n", argv[2]);
+                fprintf(stdout, "VSFS is now running index function for filesystem %s ...\n\n", argv[2]);
                 sleep(MenuBreakTime);
                 create_index(argv[2]);
+                read_index(argv[2]);
             }
             else
             {
