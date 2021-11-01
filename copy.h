@@ -1,0 +1,3 @@
+int index_of_last_slash(char *name);
+int copy_in(char *filename, char *ef_name, char *if_name);
+int copy_out(char *filename, char *if_name, char *ef_name);

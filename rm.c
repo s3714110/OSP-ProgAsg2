@@ -35,11 +35,19 @@ int remove_file(char *filename, char *if_name)
 {
     bool reading_a_file = false;
 
-    if (strlen(if_name) <= MAX_LINE_LENGTH - 2)
+    if (strlen(if_name) <= MAX_LINE_LENGTH - 3)
     {
         char internal_file_name[MAX_LINE_LENGTH] = {0};
         internal_file_name[0] = '@';
-        strncpy(internal_file_name + 1, if_name, strlen(if_name));
+        
+        if (if_name[0] == '/')
+        {
+            strncpy(internal_file_name + 1, if_name + 1, strlen(if_name));
+        }
+        else
+        {
+            strncpy(internal_file_name + 1, if_name, strlen(if_name));
+        }
 
         if (check_exist(internal_file_name, filename) == 1)
         {

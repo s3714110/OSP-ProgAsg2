@@ -1,0 +1,11 @@
+sudo watch -n1 ./temp.sh
+
+docker exec -it s3714110-centos /bin/bash
+
+./configure CXXFLAGS="-fPIC" CFLAGS="-fPIC"
+
+./configure  \
+    CPPFLAGS="-I$HOME/local/include" \
+    LDFLAGS="-L$HOME/local/lib"
+
+sudo watch -n0.1 ./temp.sh

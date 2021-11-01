@@ -14,6 +14,7 @@
 #include "rm.h"
 #include "defrag.h"
 #include "index.h"
+#include "copy.h"
 
 #define MenuBreakTime 0
 #define DefaultFilesystemName "FS.notes"
@@ -147,9 +148,10 @@ int main(int argc, char *argv[])
                     exit(EXIT_FAILURE);
                 }
 
-
-                fprintf(stdout, "VSFS is now running copyin function...\n\n");
+                init(argv[2]);
+                fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3],argv[4],argv[2]);
                 sleep(MenuBreakTime);
+                copy_in(argv[2], argv[3], argv[4]);
             }
             else
             {
