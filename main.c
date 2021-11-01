@@ -133,13 +133,60 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[1], "copyin") == 0)
         {
-            fprintf(stdout, "VSFS is now running copyin function...\n");
-            sleep(MenuBreakTime);
+            if (argc == 5)
+            {
+                if (file_name_check(argv[3]) == 0)
+                {
+                    fprintf(stderr, "Error! Invalid path to external file. Please try again\n");
+                    exit(EXIT_FAILURE);
+                }
+
+                if (file_name_check(argv[4]) == 0)
+                {
+                    fprintf(stderr, "Error! There is a syntax error with internal file name. Please try again!\n");
+                    exit(EXIT_FAILURE);
+                }
+
+
+                fprintf(stdout, "VSFS is now running copyin function...\n\n");
+                sleep(MenuBreakTime);
+            }
+            else
+            {
+                fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
+                exit(EXIT_FAILURE);
+            }
         }
         else if (strcmp(argv[1], "copyout") == 0)
         {
-            fprintf(stdout, "VSFS is now running copyout function...\n");
-            sleep(MenuBreakTime);
+            if (argc == 5)
+            {
+                if (file_name_check(argv[3]) == 0)
+                {
+                    fprintf(stderr, "Error! There is a syntax error with internal file name. Please try again!\n");
+                    exit(EXIT_FAILURE);
+                }
+
+                if (file_name_check(argv[4]) == 0)
+                {
+                    fprintf(stderr, "Error! Invalid path to external file. Please try again\n");
+                    exit(EXIT_FAILURE);
+                }
+
+                if (create_directory(argv[4]) != 0)
+                {
+                    fprintf(stderr, "Error! Path to external file can not be accessed or created. Please try again\n");
+                    exit(EXIT_FAILURE);
+                }
+
+                fprintf(stdout, "VSFS is now running copyout function...\n\n");
+                sleep(MenuBreakTime);
+            }
+            else
+            {
+                fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
+                exit(EXIT_FAILURE);
+            }
         }
         else if (strcmp(argv[1], "mkdir") == 0)
         {
