@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sysexits.h>
 
 #include "mkdir.h"
 #include "rm.h"
@@ -105,7 +106,7 @@ int copy_in(char *filename, char *ef_name, char *if_name)
             else
             {
                 fprintf(stderr, "Error! Can not find or access external file. Please try again\n");
-                exit(EXIT_FAILURE);
+                exit(EX_NOINPUT);
             }
 
             fclose(file);
@@ -114,13 +115,13 @@ int copy_in(char *filename, char *ef_name, char *if_name)
         else
         {
             fprintf(stderr, "Error! Can not access notes file. Please try again\n");
-            exit(EXIT_FAILURE);
+            exit(EX_NOINPUT);
         }
     }
     else
     {
         fprintf(stderr, "Error! The given internal file name exceeds the maximum length. Please try again!\n");
-        exit(EXIT_FAILURE);
+        exit(EX_DATAERR);
     }
     return EXIT_SUCCESS;
 }
@@ -144,7 +145,7 @@ int copy_out(char *filename, char *if_name, char *ef_name)
         if (check_exist(internal_file_name, filename) == 0)
         {
             fprintf(stderr, "Error! The given internal file can not be found on filesystem %s . Please try again!\n", filename);
-            exit(EXIT_FAILURE);
+            exit(EX_UNAVAILABLE);
         }
 
         FILE *file;
@@ -190,7 +191,7 @@ int copy_out(char *filename, char *if_name, char *ef_name)
             else
             {
                 fprintf(stderr, "Error! Can not create or modify external file. Please try again\n");
-                exit(EXIT_FAILURE);
+                exit(EX_CANTCREAT);
             }
 
             fclose(file);
@@ -199,13 +200,13 @@ int copy_out(char *filename, char *if_name, char *ef_name)
         else
         {
             fprintf(stderr, "Error! Can not access notes file. Please try again\n");
-            exit(EXIT_FAILURE);
+            exit(EX_NOINPUT);
         }
     }
     else
     {
         fprintf(stderr, "Error! The given internal file name exceeds the maximum length. Please try again!\n");
-        exit(EXIT_FAILURE);
+        exit(EX_DATAERR);
     }
 
     return EXIT_SUCCESS;

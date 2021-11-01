@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sysexits.h>
 
 #define ValidFileCheck "NOTES V1.0"
 #define MAX_LINE_LENGTH 255
@@ -162,19 +163,19 @@ int init(char *filename)
                     if (duplicate_name(next_line, line_count, filename) == 1)
                     {
                         fprintf(stderr, "Error! This is not a valid notes file. Please remove the notes file and run the program again\n");
-                        exit(EXIT_FAILURE);
+                        exit(EX_DATAERR);
                     }
 
                     if (next_line[strcspn(next_line, "\0") - 1] == '/')
                     {
                         fprintf(stderr, "Error! File name syntax error detected at line %d ! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
-                        exit(EXIT_FAILURE);
+                        exit(EX_DATAERR);
                     }
 
                     if (directory_exist(next_line, filename) == 0)
                     {
                         fprintf(stderr, "Error! %s is not a valid path because the directory does not exist ! This is not a valid notes file. Please remove the notes file and run the program again\n", next_line);
-                        exit(EXIT_FAILURE);
+                        exit(EX_DATAERR);
                     }
 
                     reading_a_file = false;
@@ -184,19 +185,19 @@ int init(char *filename)
                     if (duplicate_name(next_line, line_count, filename) == 1)
                     {
                         fprintf(stderr, "Error! This is not a valid notes file. Please remove the notes file and run the program again\n");
-                        exit(EXIT_FAILURE);
+                        exit(EX_DATAERR);
                     }
 
                     if (next_line[strcspn(next_line, "\0") - 1] != '/')
                     {
                         fprintf(stderr, "Error! Directory name syntax error detected at line %d ! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
-                        exit(EXIT_FAILURE);
+                        exit(EX_DATAERR);
                     }
 
                     if (directory_exist(next_line, filename) == 0)
                     {
                         fprintf(stderr, "Error! %s is not a valid path because the directory above this does not exist ! This is not a valid notes file. Please remove the notes file and run the program again\n", next_line);
-                        exit(EXIT_FAILURE);
+                        exit(EX_DATAERR);
                     }
 
                     reading_a_file = false;
@@ -210,14 +211,14 @@ int init(char *filename)
                     if ( (previous_line[0] != '@') && (!reading_a_file) )
                     {
                         fprintf(stderr, "Error Detected at line %d! File content needs to be under a file! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
-                        exit(EXIT_FAILURE);
+                        exit(EX_DATAERR);
                     }
                     reading_a_file = true;
                 }
                 else
                 {
                     fprintf(stderr, "Error! Unrecognised first character detected at line %d! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
-                    exit(EXIT_FAILURE);
+                    exit(EX_DATAERR);
                 }
                 strncpy(previous_line, next_line, MAX_LINE_LENGTH);
             }
@@ -225,7 +226,7 @@ int init(char *filename)
         else
         {
             fprintf(stderr, "Error! Notes identifier not found! This is not a valid notes file. Please remove the notes file and run the program again\n");
-            exit(EXIT_FAILURE);
+            exit(EX_DATAERR);
         }
 
         printf("Checking completed! This notes file is valid\n");
@@ -243,7 +244,7 @@ int init(char *filename)
         else 
         {
             fprintf(stderr, "Error! Can not access or create the notes file. Please try again\n");
-            exit(EXIT_FAILURE);
+            exit(EX_CANTCREAT);
         }
     }
 

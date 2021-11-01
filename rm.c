@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sysexits.h>
 
 #define BufferFileName "temp_buffer.notes"
 #define MAX_LINE_LENGTH 255
@@ -96,32 +97,32 @@ int remove_file(char *filename, char *if_name)
                     else
                     {
                         fprintf(stderr, "Error! Can not make changes to the buffer file. Please try again\n");
-                        exit(EXIT_FAILURE);
+                        exit(EX_IOERR);
                     }
                 }
                 else
                 {
                     fprintf(stderr, "Error! Can not make changes to the notes file. Please try again\n");
-                    exit(EXIT_FAILURE);
+                    exit(EX_IOERR);
                 }
                 
             }
             else
             {
                 fprintf(stderr, "Error! Can not access or modify the notes or buffer file. Please try again\n");
-                exit(EXIT_FAILURE);
+                exit(EX_NOINPUT);
             }
         }
         else
         {
             fprintf(stderr, "Error! The given file name can not be found in the filesystem. Please try again!\n");
-            exit(EXIT_FAILURE);
+            exit(EX_UNAVAILABLE);
         }
     }
     else
     {
         fprintf(stderr, "Error! The given file name exceeds the maximum length. Please try again!\n");
-        exit(EXIT_FAILURE);
+        exit(EX_DATAERR);
     }
 
     return EXIT_SUCCESS;
@@ -205,19 +206,19 @@ int remove_dir(char *filename, char *id_name)
                     else
                     {
                         fprintf(stderr, "Error! Can not make changes to the buffer file. Please try again\n");
-                        exit(EXIT_FAILURE);
+                        exit(EX_IOERR);
                     }
                 }
                 else
                 {
                     fprintf(stderr, "Error! Can not make changes to the notes file. Please try again\n");
-                    exit(EXIT_FAILURE);
+                    exit(EX_IOERR);
                 }
             }
             else
             {
                 fprintf(stderr, "Error! Can not access or modify the notes or buffer file. Please try again\n");
-                exit(EXIT_FAILURE);
+                exit(EX_NOINPUT);
             }
 
 
@@ -225,13 +226,13 @@ int remove_dir(char *filename, char *id_name)
         else
         {
             fprintf(stderr, "Error! The given directory name can not be found in the filesystem. Please try again!\n");
-            exit(EXIT_FAILURE);
+            exit(EX_UNAVAILABLE);
         }
     }
     else
     {
         fprintf(stderr, "Error! The given directory name exceeds the maximum length. Please try again!\n");
-        exit(EXIT_FAILURE);
+        exit(EX_DATAERR);
     }
 
     return EXIT_SUCCESS;

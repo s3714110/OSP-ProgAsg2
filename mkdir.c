@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sysexits.h>
 
 #define MAX_LINE_LENGTH 255
 
@@ -91,7 +92,7 @@ void append_directory(char *dir_name, char *filename)
         else
         {
             fprintf(stderr, "Error! Can not access or modify the notes file. Please try again\n");
-            exit(EXIT_FAILURE);
+            exit(EX_NOINPUT);
         }
     }
     else
@@ -139,13 +140,13 @@ int make_dir(char *filename, char *id_name)
         else
         {
             fprintf(stderr, "Error! The given directory already exists in the filesystem. Please try again!\n");
-            exit(EXIT_FAILURE);
+            exit(EX_DATAERR);
         }
     }
     else
     {
         fprintf(stderr, "Error! The given directory name exceeds the maximum length. Please try again!\n");
-        exit(EXIT_FAILURE);
+        exit(EX_DATAERR);
     }
     return EXIT_SUCCESS;
 }

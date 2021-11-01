@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sysexits.h>
 
 #define BufferFileName "temp_buffer.notes"
 #define MAX_LINE_LENGTH 255
@@ -96,19 +97,19 @@ int defrag(char *filename)
             else
             {
                 fprintf(stderr, "Error! Can not make changes to the buffer file. Please try again\n");
-                exit(EXIT_FAILURE);
+                exit(EX_IOERR);
             }
         }
         else
         {
             fprintf(stderr, "Error! Can not make changes to the notes file. Please try again\n");
-            exit(EXIT_FAILURE);
+            exit(EX_IOERR);
         }
     }
     else
     {
         fprintf(stderr, "Error! Can not access or modify the notes or buffer file. Please try again\n");
-        exit(EXIT_FAILURE);
+        exit(EX_NOINPUT);
     }
     return EXIT_SUCCESS;
 }
@@ -207,19 +208,19 @@ void sort_by_slashes(char *filename)
             else
             {
                 fprintf(stderr, "Error! Can not make changes to the buffer file. Please try again\n");
-                exit(EXIT_FAILURE);
+                exit(EX_IOERR);
             }
         }
         else
         {
             fprintf(stderr, "Error! Can not make changes to the notes file. Please try again\n");
-            exit(EXIT_FAILURE);
+            exit(EX_IOERR);
         }
     }
     else
     {
         fprintf(stderr, "Error! Can not access or modify the notes or buffer file. Please try again\n");
-        exit(EXIT_FAILURE);
+        exit(EX_NOINPUT);
     }
 }
 
@@ -360,19 +361,19 @@ void sort_by_dirs_files(char *filename)
             else
             {
                 fprintf(stderr, "Error! Can not make changes to the buffer file. Please try again\n");
-                exit(EXIT_FAILURE);
+                exit(EX_IOERR);
             }
         }
         else
         {
             fprintf(stderr, "Error! Can not make changes to the notes file. Please try again\n");
-            exit(EXIT_FAILURE);
+            exit(EX_IOERR);
         }
     }
     else
     {
         fprintf(stderr, "Error! Can not access or modify the notes or buffer file. Please try again\n");
-        exit(EXIT_FAILURE);
+        exit(EX_NOINPUT);
     }
 }
 

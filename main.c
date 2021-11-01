@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sysexits.h>
 
 #include "init.h"
 #include "list.h"
@@ -108,13 +109,13 @@ int main(int argc, char *argv[])
         if (file_name_check(argv[2]) == 0)
         {
             fprintf(stderr, "Error! Invalid path to notes file. Please try again\n");
-            exit(EXIT_FAILURE);
+            exit(EX_DATAERR);
         }
 
         if (create_directory(argv[2]) != 0)
         {
             fprintf(stderr, "Error! Path to note file can not be accessed or created. Please try again\n");
-            exit(EXIT_FAILURE);
+            exit(EX_CANTCREAT);
         }
 
         if (strcmp(argv[1], "list") == 0)
@@ -129,7 +130,7 @@ int main(int argc, char *argv[])
             else
             {
                 fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
-                exit(EXIT_FAILURE);
+                exit(EX_USAGE);
             }
         }
         else if (strcmp(argv[1], "copyin") == 0)
@@ -139,13 +140,13 @@ int main(int argc, char *argv[])
                 if (file_name_check(argv[3]) == 0)
                 {
                     fprintf(stderr, "Error! Invalid path to external file. Please try again\n");
-                    exit(EXIT_FAILURE);
+                    exit(EX_DATAERR);
                 }
 
                 if (file_name_check(argv[4]) == 0)
                 {
                     fprintf(stderr, "Error! There is a syntax error with internal file name. Please try again!\n");
-                    exit(EXIT_FAILURE);
+                    exit(EX_DATAERR);
                 }
 
                 init(argv[2]);
@@ -156,7 +157,7 @@ int main(int argc, char *argv[])
             else
             {
                 fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
-                exit(EXIT_FAILURE);
+                exit(EX_USAGE);
             }
         }
         else if (strcmp(argv[1], "copyout") == 0)
@@ -166,19 +167,19 @@ int main(int argc, char *argv[])
                 if (file_name_check(argv[3]) == 0)
                 {
                     fprintf(stderr, "Error! There is a syntax error with internal file name. Please try again!\n");
-                    exit(EXIT_FAILURE);
+                    exit(EX_DATAERR);
                 }
 
                 if (file_name_check(argv[4]) == 0)
                 {
                     fprintf(stderr, "Error! Invalid path to external file. Please try again\n");
-                    exit(EXIT_FAILURE);
+                    exit(EX_DATAERR);
                 }
 
                 if (create_directory(argv[4]) != 0)
                 {
                     fprintf(stderr, "Error! Path to external file can not be accessed or created. Please try again\n");
-                    exit(EXIT_FAILURE);
+                    exit(EX_CANTCREAT);
                 }
 
                 init(argv[2]);
@@ -189,7 +190,7 @@ int main(int argc, char *argv[])
             else
             {
                 fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
-                exit(EXIT_FAILURE);
+                exit(EX_USAGE);
             }
         }
         else if (strcmp(argv[1], "mkdir") == 0)
@@ -199,7 +200,7 @@ int main(int argc, char *argv[])
                 if (dir_name_check(argv[3]) == 0)
                 {
                     fprintf(stderr, "Error! There is a syntax error with given directory name. Please try again!\n");
-                    exit(EXIT_FAILURE);
+                    exit(EX_DATAERR);
                 }
 
                 init(argv[2]);
@@ -211,7 +212,7 @@ int main(int argc, char *argv[])
             else
             {
                 fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
-                exit(EXIT_FAILURE);
+                exit(EX_USAGE);
             }
         }
         else if (strcmp(argv[1], "rm") == 0)
@@ -221,7 +222,7 @@ int main(int argc, char *argv[])
                 if (file_name_check(argv[3]) == 0)
                 {
                     fprintf(stderr, "Error! There is a syntax error with given file name. Please try again!\n");
-                    exit(EXIT_FAILURE);
+                    exit(EX_DATAERR);
                 }
 
                 init(argv[2]);
@@ -233,7 +234,7 @@ int main(int argc, char *argv[])
             else
             {
                 fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
-                exit(EXIT_FAILURE);
+                exit(EX_USAGE);
             }
         }
         else if (strcmp(argv[1], "rmdir") == 0)
@@ -243,7 +244,7 @@ int main(int argc, char *argv[])
                 if (dir_name_check(argv[3]) == 0)
                 {
                     fprintf(stderr, "Error! There is a syntax error with given directory name. Please try again!\n\n");
-                    exit(EXIT_FAILURE);
+                    exit(EX_DATAERR);
                 }
 
                 init(argv[2]);
@@ -255,7 +256,7 @@ int main(int argc, char *argv[])
             else
             {
                 fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
-                exit(EXIT_FAILURE);
+                exit(EX_USAGE);
             }
         }
         else if (strcmp(argv[1], "defrag") == 0)
@@ -272,7 +273,7 @@ int main(int argc, char *argv[])
             else
             {
                 fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
-                exit(EXIT_FAILURE);
+                exit(EX_USAGE);
             }
         }
         else if (strcmp(argv[1], "index") == 0)
@@ -288,21 +289,21 @@ int main(int argc, char *argv[])
             else
             {
                 fprintf(stderr, "Error! Invalid format. Please refer to the documentations for list of arguments\n");
-                exit(EXIT_FAILURE);
+                exit(EX_USAGE);
             }
         }
 
         else
         {
             fprintf(stderr, "Error! Invalid argument. Please refer to the documentations for list of arguments\n");
-            exit(EXIT_FAILURE);
+            exit(EX_USAGE);
         }
     }
 
     else
     {
         fprintf(stderr, "Error! Program is missing arguments. Please refer to the documentations for list of arguments\n");
-        exit(EXIT_FAILURE);
+        exit(EX_USAGE);
     }
 
     return EXIT_SUCCESS;

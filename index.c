@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sysexits.h>
 
 #define IndexFileExtension ".index"
 #define MAX_LINE_LENGTH 255
@@ -56,7 +57,7 @@ int create_index(char *filename)
     else
     {
         fprintf(stderr, "Error! Can not read or access files. Please try again\n");
-        exit(EXIT_FAILURE);
+        exit(EX_NOINPUT);
     }
     return EXIT_SUCCESS;
 }
@@ -99,7 +100,7 @@ int read_index(char *filename)
     else
     {
         fprintf(stderr, "Error! Can not read or access index files. Please try again\n");
-        exit(EXIT_FAILURE);
+        exit(EX_NOINPUT);
     }
 
     return EXIT_SUCCESS;

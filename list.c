@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sysexits.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
@@ -111,7 +112,8 @@ int list(char *filename)
     struct stat fileStat;
     if (stat(filename, &fileStat) < 0)
     {
-        exit(EXIT_FAILURE);
+        fprintf(stderr, "Error! Can not get data attributes from the notes file. Please try again\n");
+        exit(EX_NOINPUT);
     }
 
     (fileStat.st_mode & S_IRUSR) ? (permissions[1] = 'r') : (permissions[1] = '-');
@@ -206,7 +208,7 @@ int list(char *filename)
     else
     {
         fprintf(stderr, "Error! Can not access the notes file. Please try again\n");
-        exit(EXIT_FAILURE);
+        exit(EX_NOINPUT);
     }
 
     return EXIT_SUCCESS;
