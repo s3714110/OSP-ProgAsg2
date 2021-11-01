@@ -104,7 +104,7 @@ int copy_in(char *filename, char *ef_name, char *if_name)
             }
             else
             {
-                fprintf(stderr, "Error! Can not access external file. Please try again\n");
+                fprintf(stderr, "Error! Can not find or access external file. Please try again\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -127,6 +127,86 @@ int copy_in(char *filename, char *ef_name, char *if_name)
 
 int copy_out(char *filename, char *if_name, char *ef_name)
 {
+    if (strlen(if_name) <= MAX_LINE_LENGTH - 2)
+    {
+        char internal_file_name[MAX_LINE_LENGTH] = {0};
+        internal_file_name[0] = '@';
+
+        if (if_name[0] == '/')
+        {
+            strncpy(internal_file_name + 1, if_name + 1, strlen(if_name));
+        }
+        else
+        {
+            strncpy(internal_file_name + 1, if_name, strlen(if_name));
+        }
+
+        if (check_exist(internal_file_name, filename) == 0)
+        {
+            fprintf(stderr, "Error! The given internal file can not be found on filesystem %s . Please try again!\n", filename);
+            exit(EXIT_FAILURE);
+        }
+
+        FILE *file;
+        FILE *external_file;
+        bool reading_a_file = false;
+
+        if ((file = fopen(filename, "r")))
+        {
+            if ((external_file = fopen(ef_name, "w+")))
+            {
+                char next_internal_line[MAX_LINE_LENGTH] = {0};
+
+                while (fgets(next_internal_line, MAX_LINE_LENGTH, file))
+                {
+                    next_internal_line[strcspn(next_internal_line, "\n")] = '\0';
+
+                    if (reading_a_file == true)
+                    {
+                        if (next_internal_line[0] == ' ')
+                        {
+                            char next_external_line[MAX_LINE_LENGTH - 2] = {0};
+                            strncpy(next_external_line, next_internal_line + 1, strlen(next_internal_line));
+                            fputs(next_external_line, external_file);
+                            fputc('\n', external_file);
+                        }
+                        else
+                        {
+                            reading_a_file = false;
+                        }
+                    }
+
+                    if (next_internal_line[0] == '@')
+                    {
+                        if (strcmp(next_internal_line, internal_file_name) == 0)
+                        {
+                            reading_a_file = true;
+                        }
+                    }
+                }
+
+                fclose(external_file);
+            }
+            else
+            {
+                fprintf(stderr, "Error! Can not create or modify external file. Please try again\n");
+                exit(EXIT_FAILURE);
+            }
+
+            fclose(file);
+            printf("Content of internal file %s on the filesystem %s has been copied out to externel file %s \n", if_name, filename, ef_name);
+        }
+        else
+        {
+            fprintf(stderr, "Error! Can not access notes file. Please try again\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else
+    {
+        fprintf(stderr, "Error! The given internal file name exceeds the maximum length. Please try again!\n");
+        exit(EXIT_FAILURE);
+    }
 
     return EXIT_SUCCESS;
 }
