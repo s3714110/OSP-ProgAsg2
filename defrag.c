@@ -203,7 +203,6 @@ void sort_by_slashes(char *filename)
         {
             if (rename(BufferFileName, filename) == 0)
             {
-                printf("Filesystem %s has been sorted by slashes.\n", filename);
             }
             else
             {
@@ -281,6 +280,33 @@ void sort_by_dirs_files(char *filename)
                     strncpy(temp_line, next_line, MAX_LINE_LENGTH);
                     temp_line[strcspn(temp_line, "\n")] = '\0';
 
+                    if (reading_a_file == true)
+                    {
+                        if (temp_line[0] == ' ')
+                        {
+                            fputs(temp_line, buffer_file);
+                            fputc('\n', buffer_file);
+                        }
+                        else
+                        {
+                            reading_a_file = false;
+                        }
+                    }
+
+                    if ((temp_line[0] == '@'))
+                    {
+
+                        if (strncmp(temp_line + 1, current_dir_name + 1, strlen(current_dir_name + 1)) == 0)
+                        {
+                            if (dir_exist_in_buffer(temp_line, BufferFileName) == 0)
+                            {
+                                fputs(temp_line, buffer_file);
+                                fputc('\n', buffer_file);
+                                reading_a_file = true;
+                            }
+                        }
+                    }
+
                     if ((temp_line[0] == '='))
                     {
 
@@ -298,7 +324,6 @@ void sort_by_dirs_files(char *filename)
                                 fputs(temp_line, buffer_file);
                                 fputc('\n', buffer_file);
                                 found = true;
-                                printf("Writing this subdir to file %s \n", current_dir_name);
                             }
                         }
                     }
@@ -326,6 +351,23 @@ void sort_by_dirs_files(char *filename)
                 }
             }
         }
+
+        if (remove(filename) == 0)
+        {
+            if (rename(BufferFileName, filename) == 0)
+            {
+            }
+            else
+            {
+                fprintf(stderr, "Error! Can not make changes to the buffer file. Please try again\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+        else
+        {
+            fprintf(stderr, "Error! Can not make changes to the notes file. Please try again\n");
+            exit(EXIT_FAILURE);
+        }
     }
     else
     {
@@ -333,9 +375,11 @@ void sort_by_dirs_files(char *filename)
         exit(EXIT_FAILURE);
     }
 }
+
 int sort(char *filename)
 {
     sort_by_slashes(filename);
     sort_by_dirs_files(filename);
+    printf("Filesystem %s has been sorted into file tree sequence.\n", filename);
     return EXIT_SUCCESS;
 }
