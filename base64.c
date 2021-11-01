@@ -221,4 +221,3 @@ int Base64encode(char *encoded, const char *string, int len)
     *p++ = '\0';
     return p - encoded;
 }
-

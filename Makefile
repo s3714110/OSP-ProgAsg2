@@ -2,7 +2,7 @@ CFLAGS = -g -Wall
 CC = gcc
 LIBS =
 TARGET = VSFS
-SOURCES = init.c list.c mkdir.c rm.c defrag.c index.c copy.c
+SOURCES = init.c list.c mkdir.c rm.c defrag.c index.c copy.c base64.c
 OBJECTS = $(SOURCES:.c=.o)
 HEADERS = $(SOURCES:.c=.h)
 RM = rm -f
@@ -18,7 +18,7 @@ $(TARGET): main.o $(OBJECTS)
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-copy.o: copy.c rm.h mkdir.h
+copy.o: copy.c rm.h mkdir.h base64.h
 	$(CC) $(CFLAGS) -c copy.c -o copy.o
 
 main.o: main.c $(HEADERS)

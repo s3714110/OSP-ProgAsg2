@@ -217,7 +217,7 @@ int init(char *filename)
                 }
                 else
                 {
-                    fprintf(stderr, "Error! Unrecognised first character detected at line %d! This is not a valid notes file. Please remove the notes file and run the program again\n", line_count);
+                    fprintf(stderr, "Error! Unrecognised first character %c detected at line %d! This is not a valid notes file. Please remove the notes file and run the program again\n", next_line[0], line_count);
                     exit(EX_DATAERR);
                 }
                 strncpy(previous_line, next_line, MAX_LINE_LENGTH);

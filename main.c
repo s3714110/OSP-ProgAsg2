@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
                 init(argv[2]);
                 fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3],argv[4],argv[2]);
                 sleep(MenuBreakTime);
-                copy_in(argv[2], argv[3], argv[4]);
+                copy_in_b64(argv[2], argv[3], argv[4]);
             }
             else
             {
