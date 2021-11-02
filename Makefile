@@ -1,6 +1,7 @@
 CFLAGS = -g -Wall
 CC = gcc
 LIBS =
+CVERSION = -std=c11
 TARGET = VSFS
 SOURCES = init.c list.c mkdir.c rm.c defrag.c index.c copy.c base64.c
 OBJECTS = $(SOURCES:.c=.o)
@@ -13,7 +14,7 @@ RM = rm -f
 all: $(TARGET)
 
 $(TARGET): main.o $(OBJECTS)
-	${CC} ${CFLAGS} -o $(TARGET) main.o $(OBJECTS) ${LIBS}
+	${CC} ${CFLAGS} -o $(TARGET) main.o $(OBJECTS) ${CVERSION} ${LIBS} 
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@
