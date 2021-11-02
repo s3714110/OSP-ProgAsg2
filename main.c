@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -100,23 +101,58 @@ int create_directory(char *path_name)
 }
 
 int is_file_gz(char *filename)
-{   
+{
     int is_gz = 0;
     char file_extensions[3] = {0};
 
-    if(strlen(filename) > 3)
-    {   
+    if (strlen(filename) > 3)
+    {
         strncpy(file_extensions, filename + (strlen(filename) - 3), 3);
-        if(strcmp(file_extensions, ".gz") == 0)
+        if (strcmp(file_extensions, ".gz") == 0)
         {
             is_gz = 1;
             printf("%s is a gz file\n", filename);
         }
     }
-    
 
     return is_gz;
+}
 
+int zip_file(char *filename)
+{
+    int failure = 0;
+    return failure;
+}
+
+int upzip_file(char *filename)
+{
+    int failure = 1;
+    char cmd[MAX_PATH_LENGTH] = {0};
+    strcat(cmd, "gunzip -f ");
+    strcat(cmd, filename);
+
+    FILE *output;
+
+    if ((output = popen(cmd, "r")))
+    {
+        printf("Success\n");
+        failure = 0;
+    }
+    else
+    {
+        failure = 1;
+        fprintf(stderr, "Cannot run %s ! Please try again \n", cmd);
+        exit(EX_OSERR);
+    }
+
+    if(pclose(output) != 0)
+    {
+        printf("Failure\n");
+        failure = 1;
+        exit(EX_SOFTWARE);
+    }
+
+    return failure;
 }
 
 int main(int argc, char *argv[])
@@ -133,7 +169,7 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Error! Invalid path to notes file. Please try again\n");
             exit(EX_DATAERR);
         }
-        
+
         if (create_directory(argv[2]) != 0)
         {
             fprintf(stderr, "Error! Path to note file can not be accessed or created. Please try again\n");
@@ -146,6 +182,7 @@ int main(int argc, char *argv[])
         }
         else
         {
+            upzip_file(argv[2]);
             strncpy(filesystem_name, argv[2], strlen(argv[2]));
         }
 
@@ -181,7 +218,7 @@ int main(int argc, char *argv[])
                 }
 
                 init(filesystem_name);
-                fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3],argv[4],filesystem_name);
+                fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3], argv[4], filesystem_name);
                 sleep(MenuBreakTime);
                 copy_in_b64(filesystem_name, argv[3], argv[4]);
             }
@@ -208,7 +245,7 @@ int main(int argc, char *argv[])
                 }
 
                 init(filesystem_name);
-                fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3],argv[4],filesystem_name);
+                fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3], argv[4], filesystem_name);
                 sleep(MenuBreakTime);
                 copy_in(filesystem_name, argv[3], argv[4]);
             }
@@ -241,7 +278,7 @@ int main(int argc, char *argv[])
                 }
 
                 init(filesystem_name);
-                fprintf(stdout, "VSFS is now running copyout to copy internal file %s on filesytem %s out to external file %s...\n\n",argv[3],filesystem_name,argv[4]);
+                fprintf(stdout, "VSFS is now running copyout to copy internal file %s on filesytem %s out to external file %s...\n\n", argv[3], filesystem_name, argv[4]);
                 sleep(MenuBreakTime);
                 copy_out_b64(filesystem_name, argv[3], argv[4]);
             }
@@ -274,7 +311,7 @@ int main(int argc, char *argv[])
                 }
 
                 init(filesystem_name);
-                fprintf(stdout, "VSFS is now running copyout to copy internal file %s on filesytem %s out to external file %s...\n\n",argv[3],filesystem_name,argv[4]);
+                fprintf(stdout, "VSFS is now running copyout to copy internal file %s on filesytem %s out to external file %s...\n\n", argv[3], filesystem_name, argv[4]);
                 sleep(MenuBreakTime);
                 copy_out(filesystem_name, argv[3], argv[4]);
             }
