@@ -45,7 +45,7 @@ int create_index(char *filename)
             else if (next_line[0] == '=')
             {
                 char line_count_str[MAX_LINE_LENGTH];
-                sprintf(line_count_str, "%d", line_count);  // converts int to char array
+                sprintf(line_count_str, "%d", line_count); // converts int to char array
 
                 // writes dir name and its line number into index file
                 fputs(next_line, index_file);

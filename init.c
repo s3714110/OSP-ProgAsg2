@@ -226,7 +226,7 @@ int init(char *filename)
                     }
                     reading_a_file = true; // this is true until the next line is not a file content
                 }
-                else    // errors if first character is not any one of the above
+                else // errors if first character is not any one of the above
                 {
                     fprintf(stderr, "Error! Unrecognised first character %c detected at line %d! This is not a valid notes file. Please remove the notes file and run the program again\n", next_line[0], line_count);
                     exit(EX_DATAERR);

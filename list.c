@@ -177,9 +177,9 @@ int list(char *filename)
                 strncpy(dir_name, next_line, MAX_ATTR_LENGTH);
                 dir_name[0] = '\0';
 
-                permissions[0] = '-';   // first char of permission is '-'
-                char hard_links[] = "  1"; //hard links is '  1' (with 3 chars as specified in the specs)
-                int size = count_lines(next_line, filename);    //gets number of lines
+                permissions[0] = '-';                        // first char of permission is '-'
+                char hard_links[] = "  1";                   //hard links is '  1' (with 3 chars as specified in the specs)
+                int size = count_lines(next_line, filename); //gets number of lines
 
                 //displays file attributes to stdout
                 for (int i = 0; i < MAX_ATTR_LENGTH; i++)
@@ -195,15 +195,15 @@ int list(char *filename)
 
                 printf("\n");
             }
-            else if (next_line[0] == '=')   //if next line is a dir
+            else if (next_line[0] == '=') //if next line is a dir
             {
                 char dir_name[MAX_ATTR_LENGTH] = {0};
                 strncpy(dir_name, next_line, MAX_ATTR_LENGTH);
                 dir_name[0] = '\0';
 
-                permissions[0] = 'd';   //first char of permisions is 'd'
-                int hard_links = count_links(next_line, filename);  //gets number of dir 1 level below
-                int size = 0;   //size is 0 because this is a dir
+                permissions[0] = 'd';                              //first char of permisions is 'd'
+                int hard_links = count_links(next_line, filename); //gets number of dir 1 level below
+                int size = 0;                                      //size is 0 because this is a dir
 
                 //displays file attributes to stdout
                 for (int i = 0; i < MAX_ATTR_LENGTH; i++)

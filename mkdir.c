@@ -112,7 +112,7 @@ int make_dir(char *filename, char *id_name)
     {
 
         char dir_name[MAX_LINE_LENGTH] = {0};
-        dir_name[0] = '=';  // sets first character for dir
+        dir_name[0] = '='; // sets first character for dir
 
         // if the provided dir name start with '/', remove it
         if (id_name[0] == '/')
@@ -130,9 +130,9 @@ int make_dir(char *filename, char *id_name)
             dir_name[strcspn(dir_name, "\0")] = '/';
         }
 
-        if (duplicate_directory(dir_name, filename) == 0)   // checks to see it the wanted directory already exists
+        if (duplicate_directory(dir_name, filename) == 0) // checks to see it the wanted directory already exists
         {
-            int number_of_slashes = count_slash(dir_name);  // counts how many level is this dir
+            int number_of_slashes = count_slash(dir_name); // counts how many level is this dir
             int last_slash_index = 0;
 
             //recursively creates dir above the given directory as needed
@@ -147,7 +147,7 @@ int make_dir(char *filename, char *id_name)
                 last_slash_index = current_slash_index;
             }
         }
-        else    // if yes, error
+        else // if yes, error
         {
             fprintf(stderr, "Error! The given directory already exists in the filesystem. Please try again!\n");
             exit(EX_DATAERR);
