@@ -103,13 +103,14 @@ int create_directory(char *path_name)
 int is_file_gz(char *filename)
 {
     int is_gz = 0;
-    char file_extensions[3] = {0};
+    char file_extensions[MAX_PATH_LENGTH] = {0};
 
     if (strlen(filename) > 3)
     {
-        strncpy(file_extensions, filename + (strlen(filename) - 3), 3);
+        strncpy(file_extensions, filename + (strlen(filename) - 3), MAX_PATH_LENGTH);
         if (strcmp(file_extensions, ".gz") == 0)
-        {
+        {   
+            
             is_gz = 1;
         }
     }
