@@ -26,7 +26,7 @@ int count_links(char *name, char *filename)
     char temp_path[MAX_ATTR_LENGTH] = {0};
     strncpy(temp_path, name, MAX_ATTR_LENGTH);
 
-    //counts slash in main dir and get lash slash index
+    //counts slash in main dir and get slash index
     for (int i = 0; i <= strlen(temp_path); i++)
     {
         if (temp_path[i] == '/')
@@ -36,6 +36,7 @@ int count_links(char *name, char *filename)
         }
     }
 
+    //extracts dir 1 level above
     char dir_of_file[MAX_ATTR_LENGTH] = {0};
     strncpy(dir_of_file, temp_path, index_of_slash + 1);
 
@@ -145,7 +146,7 @@ int list(char *filename)
     //gets ownsers and group name
     strncpy(owners, pw->pw_name, MAX_ATTR_LENGTH);
     strncpy(groups, gr->gr_name, MAX_ATTR_LENGTH);
-    //gets time in what the file was last modified
+    //gets time when the file was last modified
     strncpy(date, ctime(&fileStat.st_mtime), MAX_ATTR_LENGTH);
 
     //convert the time into local timezone
