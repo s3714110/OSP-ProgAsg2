@@ -64,3 +64,4 @@ VSFS
 *.notes
 *.index
 *.temp
+*.gz
