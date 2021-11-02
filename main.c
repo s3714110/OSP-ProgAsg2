@@ -120,7 +120,36 @@ int is_file_gz(char *filename)
 
 int zip_file(char *filename)
 {
-    int failure = 0;
+    int failure = 1;
+    char cmd[MAX_PATH_LENGTH] = {0};
+    strcat(cmd, "gzip -f ");
+    strcat(cmd, filename);
+
+    FILE *output;
+
+    if ((output = popen(cmd, "r")))
+    {
+        printf("Compressing %s ...\n", filename);
+    }
+    else
+    {
+        failure = 1;
+        fprintf(stderr, "Cannot run %s ! Please try again \n", cmd);
+        exit(EX_OSERR);
+    }
+
+    if (pclose(output) == 0)
+    {
+        printf("File %s has been succesfully compressed into a .gz file\n", filename);
+        failure = 0;
+    }
+    else
+    {
+        failure = 1;
+        fprintf(stderr, "Error! Program is now exitting...\n");
+        exit(EX_SOFTWARE);
+    }
+
     return failure;
 }
 
