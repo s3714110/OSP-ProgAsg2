@@ -111,7 +111,6 @@ int is_file_gz(char *filename)
         if (strcmp(file_extensions, ".gz") == 0)
         {
             is_gz = 1;
-            printf("%s is a gz file\n", filename);
         }
     }
 
@@ -215,6 +214,7 @@ int main(int argc, char *argv[])
         }
         else
         {
+            printf("%s is a gz file and will need to be uncompressed\n", argv[2]);
             if (upzip_file(argv[2]) == 0)
             {
                 strncpy(filesystem_name, argv[2], strlen(argv[2]) - 3);
@@ -466,6 +466,20 @@ int main(int argc, char *argv[])
         {
             fprintf(stderr, "Error! Invalid argument. Please refer to the documentations for list of arguments\n");
             exit(EX_USAGE);
+        }
+
+        if (is_file_gz(argv[2]) == 1)
+        {
+            printf("\nUncompressed file %s will need to be compressed back into a .gz file\n",filesystem_name);
+            if (zip_file(filesystem_name) == 0)
+            {
+                printf("Filesystem has been compressed into %s \n", argv[2]);
+            }
+            else
+            {
+                fprintf(stderr, "Error! Program is now exitting...\n");
+                exit(EX_SOFTWARE);
+            }
         }
     }
 
