@@ -68,3 +68,4 @@ VSFS
 
 #dont include test directory
 !test/*
+!test/*/*

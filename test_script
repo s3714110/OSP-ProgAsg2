@@ -160,11 +160,96 @@ exit_code_invalid_arguments()
     fi
 }
 
+test_for_invalid_fs()
+{
+    echo "Checking for EX_DATAERR exit codes when supplied in invalid notes file with duplicate name..."
+    $VSFS list test/invalid.notes
+    status=$?
+    if [[ $status -eq $EX_DATAERR ]]
+    then
+        echo "Correct exit code for invalid notes file with duplicate name"
+    else
+        echo "Incorrect exit code for invalid notes file with duplicate name" 
+        exit 1
+    fi
+
+    echo "Checking for EX_DATAERR exit codes when supplied in invalid notes file with invalid dir path..."
+    $VSFS list test/invalid2.notes
+    status=$?
+    if [[ $status -eq $EX_DATAERR ]]
+    then
+        echo "Correct exit code for invalid notes file with invalid dir path"
+    else
+        echo "Incorrect exit code for invalid notes file with invalid dir path" 
+        exit 1
+    fi
+
+    echo "Checking for EX_DATAERR exit codes when supplied in invalid notes file with invalid file content..."
+    $VSFS list test/invalid3.notes
+    status=$?
+    if [[ $status -eq $EX_DATAERR ]]
+    then
+        echo "Correct exit code for invalid notes file with invalid file content"
+    else
+        echo "Incorrect exit code for invalid notes file with invalid file content" 
+        exit 1
+    fi
+}
+
+check_copyin_results()
+{
+    cp -f test/test_copy/copy_in_image_before.notes test/test_copy/copy_in_image.notes
+    echo "Checking the .notes file after copying in an image..."
+    $VSFS copyin test/test_copy/copy_in_image.notes test/test_image testdir/testimage
+
+    if cmp -s "test/test_copy/copy_in_image.notes" "test/test_copy/copy_in_image_expected.notes"
+    then
+        echo "The filesystem after copyin is as expected"
+    else
+        echo "The filesystem after copyin is not correct"
+        exit 1
+    fi
+
+    rm -f test/test_copy/copy_in_image.notes
+
+    cp -f test/test_copy/copy_in_text_before.notes test/test_copy/copy_in_text.notes
+    echo "Checking the .notes file after copying in a text file..."
+    $VSFS copyin test/test_copy/copy_in_text.notes test/test_text testdir/testtext
+
+    if cmp -s "test/test_copy/copy_in_text.notes" "test/test_copy/copy_in_text_expected.notes"
+    then
+        echo "The filesystem after copyin is as expected"
+    else
+        echo "The filesystem after copyin is not correct"
+        exit 1
+    fi
+
+    rm -f test/test_copy/copy_in_text.notes
+}
+
+check_copyout_results()
+{
+    echo "Checking the external image file after being copied out if file system..."
+    $VSFS copyout test/test.notes testdir/testimage test/test_image_out
+
+    if cmp -s "test/test_image_out" "test/test_image" 
+    then
+        echo "The image file after being copied out is the same as before"
+    else
+        echo "The image file after being copied out is corrupted"
+        exit 1
+    fi
+    rm -f test/test_image_out
+}
+
 init_test
 exit_code_missing_arguments
 exit_code_invalid_filename
 exit_code_cant_create_directory
 exit_code_gzip_fail
 exit_code_invalid_arguments
+test_for_invalid_fs
+check_copyin_results
+check_copyout_results
 echo "All tests passed!"
 clean_up

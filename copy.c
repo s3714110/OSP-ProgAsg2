@@ -446,7 +446,7 @@ int copy_out_b64(char *filename, char *if_name, char *ef_name)
 
                     // finds out how much space does the decoded data will take
                     // plus 1 is for the null terminator
-                    decoded_length = b64_decoded_size(file_to_string) + 1;
+                    decoded_length = b64_decoded_size(file_to_string) ;
                     decoded_data = malloc(decoded_length);
 
                     //decodes the char array, which contains the encoded file content
@@ -457,7 +457,7 @@ int copy_out_b64(char *filename, char *if_name, char *ef_name)
                         exit(EX_SOFTWARE);
                     }
 
-                    decoded_data[decoded_length] = '\0';
+                    
 
                     FILE *external_file;
                     if ((external_file = fopen(ef_name, "w+b"))) // opens the external file in write binary mode
