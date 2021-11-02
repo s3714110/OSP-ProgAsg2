@@ -24,7 +24,7 @@ There are multiple options for this program. You can supply a valid .notes file 
 ./VSFS copyin [filesystem_name] [external_file_name] [internal_file_name]
 ```
 
-* To copy an internal file within the filesystem to external file EF and have its content decoded with base64
+* To copy an internal file within the filesystem to external file and have its content decoded with base64
 ```bash
 ./VSFS copyout [filesystem_name] [internal_file_name] [external_file_name]  
 ```
@@ -71,7 +71,7 @@ By default, the copyin and copyout will encode and decode data of the external f
 ./VSFS copyin_plain [filesystem_name] [external_file_name] [internal_file_name]
 ```
 
-* To copy an internal file within the filesystem to external file EF in plain format
+* To copy an internal file within the filesystem to external file in plain format
 ```bash
 ./VSFS copyout_plain [filesystem_name] [internal_file_name] [external_file_name]  
 ```
