@@ -99,6 +99,26 @@ int create_directory(char *path_name)
     return error_code;
 }
 
+int is_file_gz(char *filename)
+{   
+    int is_gz = 0;
+    char file_extensions[3] = {0};
+
+    if(strlen(filename) > 3)
+    {   
+        strncpy(file_extensions, filename + (strlen(filename) - 3), 3);
+        if(strcmp(file_extensions, ".gz") == 0)
+        {
+            is_gz = 1;
+            printf("%s is a gz file\n", filename);
+        }
+    }
+    
+
+    return is_gz;
+
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -106,26 +126,37 @@ int main(int argc, char *argv[])
 
     if (argc >= 3)
     {
+        char filesystem_name[MAX_PATH_LENGTH] = {0};
+
         if (file_name_check(argv[2]) == 0)
         {
             fprintf(stderr, "Error! Invalid path to notes file. Please try again\n");
             exit(EX_DATAERR);
         }
-
+        
         if (create_directory(argv[2]) != 0)
         {
             fprintf(stderr, "Error! Path to note file can not be accessed or created. Please try again\n");
             exit(EX_CANTCREAT);
         }
 
+        if (is_file_gz(argv[2]) == 0)
+        {
+            strncpy(filesystem_name, argv[2], strlen(argv[2]));
+        }
+        else
+        {
+            strncpy(filesystem_name, argv[2], strlen(argv[2]));
+        }
+
         if (strcmp(argv[1], "list") == 0)
         {
             if (argc == 3)
             {
-                init(argv[2]);
-                fprintf(stdout, "VSFS is now running list function for filesystem %s ...\n\n", argv[2]);
+                init(filesystem_name);
+                fprintf(stdout, "VSFS is now running list function for filesystem %s ...\n\n", filesystem_name);
                 sleep(MenuBreakTime);
-                list(argv[2]);
+                list(filesystem_name);
             }
             else
             {
@@ -149,10 +180,10 @@ int main(int argc, char *argv[])
                     exit(EX_DATAERR);
                 }
 
-                init(argv[2]);
-                fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3],argv[4],argv[2]);
+                init(filesystem_name);
+                fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3],argv[4],filesystem_name);
                 sleep(MenuBreakTime);
-                copy_in_b64(argv[2], argv[3], argv[4]);
+                copy_in_b64(filesystem_name, argv[3], argv[4]);
             }
             else
             {
@@ -176,10 +207,10 @@ int main(int argc, char *argv[])
                     exit(EX_DATAERR);
                 }
 
-                init(argv[2]);
-                fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3],argv[4],argv[2]);
+                init(filesystem_name);
+                fprintf(stdout, "VSFS is now running copyin to copy external file %s into internal file %s on filesystem %s...\n\n", argv[3],argv[4],filesystem_name);
                 sleep(MenuBreakTime);
-                copy_in(argv[2], argv[3], argv[4]);
+                copy_in(filesystem_name, argv[3], argv[4]);
             }
             else
             {
@@ -209,10 +240,10 @@ int main(int argc, char *argv[])
                     exit(EX_CANTCREAT);
                 }
 
-                init(argv[2]);
-                fprintf(stdout, "VSFS is now running copyout to copy internal file %s on filesytem %s out to external file %s...\n\n",argv[3],argv[2],argv[4]);
+                init(filesystem_name);
+                fprintf(stdout, "VSFS is now running copyout to copy internal file %s on filesytem %s out to external file %s...\n\n",argv[3],filesystem_name,argv[4]);
                 sleep(MenuBreakTime);
-                copy_out_b64(argv[2], argv[3], argv[4]);
+                copy_out_b64(filesystem_name, argv[3], argv[4]);
             }
             else
             {
@@ -242,10 +273,10 @@ int main(int argc, char *argv[])
                     exit(EX_CANTCREAT);
                 }
 
-                init(argv[2]);
-                fprintf(stdout, "VSFS is now running copyout to copy internal file %s on filesytem %s out to external file %s...\n\n",argv[3],argv[2],argv[4]);
+                init(filesystem_name);
+                fprintf(stdout, "VSFS is now running copyout to copy internal file %s on filesytem %s out to external file %s...\n\n",argv[3],filesystem_name,argv[4]);
                 sleep(MenuBreakTime);
-                copy_out(argv[2], argv[3], argv[4]);
+                copy_out(filesystem_name, argv[3], argv[4]);
             }
             else
             {
@@ -263,10 +294,10 @@ int main(int argc, char *argv[])
                     exit(EX_DATAERR);
                 }
 
-                init(argv[2]);
-                fprintf(stdout, "VSFS is now running mkdir to create directory %s for filesystem %s...\n\n", argv[3], argv[2]);
+                init(filesystem_name);
+                fprintf(stdout, "VSFS is now running mkdir to create directory %s for filesystem %s...\n\n", argv[3], filesystem_name);
                 sleep(MenuBreakTime);
-                make_dir(argv[2], argv[3]);
+                make_dir(filesystem_name, argv[3]);
             }
 
             else
@@ -285,10 +316,10 @@ int main(int argc, char *argv[])
                     exit(EX_DATAERR);
                 }
 
-                init(argv[2]);
-                fprintf(stdout, "VSFS is now running rm to remove file %s for filesystem %s ...\n\n", argv[3], argv[2]);
+                init(filesystem_name);
+                fprintf(stdout, "VSFS is now running rm to remove file %s for filesystem %s ...\n\n", argv[3], filesystem_name);
                 sleep(MenuBreakTime);
-                remove_file(argv[2], argv[3]);
+                remove_file(filesystem_name, argv[3]);
             }
 
             else
@@ -307,10 +338,10 @@ int main(int argc, char *argv[])
                     exit(EX_DATAERR);
                 }
 
-                init(argv[2]);
-                fprintf(stdout, "VSFS is now running rmdir to remove directory %s for filesystem %s ...\n", argv[3], argv[2]);
+                init(filesystem_name);
+                fprintf(stdout, "VSFS is now running rmdir to remove directory %s for filesystem %s ...\n", argv[3], filesystem_name);
                 sleep(MenuBreakTime);
-                remove_dir(argv[2], argv[3]);
+                remove_dir(filesystem_name, argv[3]);
             }
 
             else
@@ -324,11 +355,11 @@ int main(int argc, char *argv[])
 
             if (argc == 3)
             {
-                init(argv[2]);
-                fprintf(stdout, "VSFS is now running defrag function for filesystem %s ...\n\n", argv[2]);
+                init(filesystem_name);
+                fprintf(stdout, "VSFS is now running defrag function for filesystem %s ...\n\n", filesystem_name);
                 sleep(MenuBreakTime);
-                defrag(argv[2]);
-                sort(argv[2]);
+                defrag(filesystem_name);
+                sort(filesystem_name);
             }
             else
             {
@@ -340,11 +371,11 @@ int main(int argc, char *argv[])
         {
             if (argc == 3)
             {
-                init(argv[2]);
-                fprintf(stdout, "VSFS is now running index function for filesystem %s ...\n\n", argv[2]);
+                init(filesystem_name);
+                fprintf(stdout, "VSFS is now running index function for filesystem %s ...\n\n", filesystem_name);
                 sleep(MenuBreakTime);
-                create_index(argv[2]);
-                read_index(argv[2]);
+                create_index(filesystem_name);
+                read_index(filesystem_name);
             }
             else
             {
