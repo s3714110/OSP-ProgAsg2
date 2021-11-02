@@ -62,6 +62,17 @@ If you wish to remove the program and all of its object files, run this command:
 make clean
 ```
 
+## Testing
+
+If you wish to a series of automated unit tests to check for the program functionality, run this command
+
+```bash
+./test_script
+```
+
+If you see this line in console: "All tests passed!", it means the program passed all the tests and is working is expected.
+However, if the script outputs this line in console: "Test Failed. Script exitting...", it means one of the functionality is broken. Suggested solution is to reinstall the program, or use different C flags in Makefile
+
 ## Additional notes
 
 By default, the copyin and copyout options will encode and decode data of the external file, respectively, in order to make sure the program can store and preserve the content of all types of files, including text files or binary files, etc... The result is when you open the filesystem file with a note editor, the file content will be encoded using base64 algorithm. If you wish to just have the content of the external file in plain and orignal format, you can run these two commands, but be aware that the content of binary files may get corrupted and missing:

@@ -8,6 +8,7 @@ status=$?
 #error codes
 EX_USAGE=64
 EX_DATAERR=65
+EX_UNAVAILABLE=69
 EX_CANTCREAT=73
 EX_SOFTWARE=70
 
@@ -31,7 +32,8 @@ exit_code_missing_arguments() {
     then
         echo "Correct exit code for missing arguments"
     else
-        echo "Incorrect exit code for missing arguments" 
+        echo "Incorrect exit code for missing arguments"
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -43,6 +45,7 @@ exit_code_missing_arguments() {
         echo "Correct exit code for missing arguments"
     else
         echo "Incorrect exit code for missing arguments" 
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -57,6 +60,7 @@ exit_code_invalid_filename(){
         echo "Correct exit code for invalid file name"
     else
         echo "Incorrect exit code for invalid file name" 
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -68,6 +72,7 @@ exit_code_invalid_filename(){
         echo "Correct exit code for invalid file name"
     else
         echo "Incorrect exit code for invalid file name" 
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -79,6 +84,7 @@ exit_code_invalid_filename(){
         echo "Correct exit code for invalid file name"
     else
         echo "Incorrect exit code for invalid file name" 
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -90,6 +96,7 @@ exit_code_invalid_filename(){
         echo "Correct exit code for invalid file name"
     else
         echo "Incorrect exit code for invalid file name" 
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 }
@@ -103,7 +110,8 @@ exit_code_cant_create_directory()
     then
         echo "Correct exit code for not able to create directory"
     else
-        echo "Incorrect exit code for not able to create directory" 
+        echo "Incorrect exit code for not able to create directory"
+        echo "Test Failed. Script exitting..."  
         exit 1
     fi
 }
@@ -119,6 +127,7 @@ exit_code_gzip_fail()
         echo "Correct exit code for gzip cant find file"
     else
         echo "Incorrect exit code for gzip cant find file" 
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -129,7 +138,8 @@ exit_code_gzip_fail()
     then
         echo "Correct exit code for gzip uses invalid file format "
     else
-        echo "Incorrect exit code for gzip uses invalid file format e" 
+        echo "Incorrect exit code for gzip uses invalid file format" 
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -145,6 +155,7 @@ exit_code_invalid_arguments()
         echo "Correct exit code for invalid arguments"
     else
         echo "Incorrect exit code for invalid arguments" 
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -156,6 +167,7 @@ exit_code_invalid_arguments()
         echo "Correct exit code for invalid arguments"
     else
         echo "Incorrect exit code for invalid arguments" 
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 }
@@ -169,7 +181,8 @@ test_for_invalid_fs()
     then
         echo "Correct exit code for invalid notes file with duplicate name"
     else
-        echo "Incorrect exit code for invalid notes file with duplicate name" 
+        echo "Incorrect exit code for invalid notes file with duplicate name"
+        echo "Test Failed. Script exitting..."  
         exit 1
     fi
 
@@ -181,6 +194,7 @@ test_for_invalid_fs()
         echo "Correct exit code for invalid notes file with invalid dir path"
     else
         echo "Incorrect exit code for invalid notes file with invalid dir path" 
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -191,7 +205,8 @@ test_for_invalid_fs()
     then
         echo "Correct exit code for invalid notes file with invalid file content"
     else
-        echo "Incorrect exit code for invalid notes file with invalid file content" 
+        echo "Incorrect exit code for invalid notes file with invalid file content"
+        echo "Test Failed. Script exitting..."  
         exit 1
     fi
 }
@@ -207,6 +222,7 @@ check_copyin_results()
         echo "The filesystem after copyin is as expected"
     else
         echo "The filesystem after copyin is not correct"
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -221,6 +237,7 @@ check_copyin_results()
         echo "The filesystem after copyin is as expected"
     else
         echo "The filesystem after copyin is not correct"
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
 
@@ -237,6 +254,7 @@ check_copyout_results()
         echo "The image file after being copied out is the same as before"
     else
         echo "The image file after being copied out is corrupted"
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
     rm -f test/test_image_out
@@ -249,6 +267,7 @@ check_copyout_results()
         echo "The text file after being copied out is the same as before"
     else
         echo "The text file after being copied out is corrupted"
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
     rm -f test/test_text_out
@@ -266,6 +285,7 @@ check_mkdir_results()
         echo "The filesystem after mkdir is as expected"
     else
         echo "The filesystem after mkdir is not correct"
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
     rm -f test/test_mkdir/mkdir.notes
@@ -283,6 +303,7 @@ check_rm_results()
         echo "The filesystem after rm is as expected"
     else
         echo "The filesystem after rm is not correct"
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
     rm -f test/test_rm/rm.notes
@@ -299,6 +320,7 @@ check_rmdir_results()
         echo "The filesystem after rmdir is as expected"
     else
         echo "The filesystem after rmdir is not correct"
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
     rm -f test/test_rmdir/rmdir.notes
@@ -315,11 +337,59 @@ check_defrag_result()
         echo "The filesystem after defrag is as expected"
     else
         echo "The filesystem after defrag is not correct"
+        echo "Test Failed. Script exitting..." 
         exit 1
     fi
     rm -f test/test_defrag/defrag.notes
 
 
+}
+
+exit_code_mkdir_duplicate()
+{
+    echo "Checking for EX_DATAERR exit codes trying to mkdir an existing directory ..."
+    $VSFS mkdir test/test.notes dir1
+    status=$?
+    if [[ $status -eq $EX_DATAERR ]]
+    then
+        echo "Correct exit code for mkdir with duplicate entries"
+    else
+        echo "Incorrect exit code for mkdir with duplicate entries" 
+        echo "Test Failed. Script exitting..." 
+        exit 1
+    fi
+}
+
+exit_code_rm_filenotfound()
+{   
+    echo "Checking for EX_UNAVAILABLE exit codes trying to rm a file that doesnt exist ..."
+
+    $VSFS rm test/test.notes thisfiledoesnotexist
+    status=$?
+    if [[ $status -eq $EX_UNAVAILABLE ]]
+    then
+        echo "Correct exit code for rm for file that doesnt exist"
+    else
+        echo "Incorrect exit code for rm for file that doesnt exist" 
+        echo "Test Failed. Script exitting..." 
+        exit 1
+    fi
+}
+
+exit_code_rmdir_dirnotfound()
+{   
+    echo "Checking for EX_UNAVAILABLE exit codes trying to rmdir a dir that doesnt exist ..."
+
+    $VSFS rmdir test/test.notes this/dir/does/not/exist
+    status=$?
+    if [[ $status -eq $EX_UNAVAILABLE ]]
+    then
+        echo "Correct exit code for rmdir for dir that doesnt exist"
+    else
+        echo "Incorrect exit code for rmdir for dir that doesnt exist" 
+        echo "Test Failed. Script exitting..." 
+        exit 1
+    fi
 }
 
 init_test
@@ -335,5 +405,9 @@ check_mkdir_results
 check_rm_results
 check_rmdir_results
 check_defrag_result
+exit_code_mkdir_duplicate
+exit_code_rm_filenotfound
+exit_code_rmdir_dirnotfound
 echo "All tests passed!"
+echo "Cleaning up..."
 clean_up
