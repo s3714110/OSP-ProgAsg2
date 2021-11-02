@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
                 init(argv[2]);
                 fprintf(stdout, "VSFS is now running copyout to copy internal file %s on filesytem %s out to external file %s...\n\n",argv[3],argv[2],argv[4]);
                 sleep(MenuBreakTime);
-                copy_out(argv[2], argv[3], argv[4]);
+                copy_out_b64(argv[2], argv[3], argv[4]);
             }
             else
             {

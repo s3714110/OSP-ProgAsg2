@@ -274,12 +274,11 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
                 fputs(internal_file_name, file);
                 fputc('\n', file);
 
-                /* char *file_to_string = 0;
+                unsigned char *file_to_string = 0;
                 long length;
 
                 fseek(external_file, 0, SEEK_END);
                 length = ftell(external_file);
-                printf("Length: %ld\n", length);
                 fseek(external_file, 0, SEEK_SET);
                 file_to_string = malloc(length);
                 if (file_to_string)
@@ -287,29 +286,8 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
                     fread(file_to_string, 1, length, external_file);
                 }
 
-                printf("File data: %s \n", file_to_string); */
-
-                unsigned char *file_to_string = 0;
-                long length;
-
-                fseek(external_file, 0, SEEK_END);
-                length = ftell(external_file);  
-                fseek(external_file, 0, SEEK_SET);
-                file_to_string = malloc(length);
-                if (file_to_string)
-                {
-                     fread(file_to_string, 1, length, external_file);
-                }
-                printf("Length: %ld\n", length);
-
-                for(int i = 0; i < length; i++)
-                {
-                    printf("%x", file_to_string[i]);
-                }
                 char *encoded_data;
-                encoded_data = b64_encode(file_to_string, length );
-                printf("\nEncoded data here: %s\n", encoded_data);
-
+                encoded_data = b64_encode(file_to_string, length);
 
                 int encoded_lines = (strlen(encoded_data) / (MAX_LINE_LENGTH - 3)) + 1;
 
@@ -324,6 +302,7 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
                 }
 
                 fclose(external_file);
+                free(file_to_string);
             }
             else
             {
@@ -348,7 +327,7 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
     return EXIT_SUCCESS;
 }
 
-/* int copy_out_b64(char *filename, char *if_name, char *ef_name)
+int copy_out_b64(char *filename, char *if_name, char *ef_name)
 {
     if (strlen(if_name) <= MAX_LINE_LENGTH - 3)
     {
@@ -413,11 +392,12 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
 
                 fclose(temp_external_file);
 
-                char *file_to_string = 0;
-                long length;
-
                 if ((temp_external_file = fopen(temp_external_filename, "r")))
                 {
+
+                    char *file_to_string = 0;
+                    long length;
+
                     fseek(temp_external_file, 0, SEEK_END);
                     length = ftell(temp_external_file);
                     fseek(temp_external_file, 0, SEEK_SET);
@@ -429,12 +409,26 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
 
                     fclose(temp_external_file);
 
-                    char decoded_data[Base64decode_len(file_to_string)];
-                    Base64decode(decoded_data, file_to_string);
+                    size_t decoded_length;
+                    unsigned char *decoded_data;
+
+                    decoded_length = b64_decoded_size(file_to_string) + 1;
+                    decoded_data = malloc(decoded_length);
+
+                    if (!b64_decode(file_to_string, decoded_data, decoded_length))
+                    {
+                        fprintf(stderr, "Error! Something went wront with base64 decoding. Please try again\n");
+                        exit(EX_SOFTWARE);
+                    }
+
+                    decoded_data[decoded_length] = '\0';
+
+                    
+
                     FILE *external_file;
                     if ((external_file = fopen(ef_name, "w+b")))
                     {
-                        fputs(decoded_data, external_file);
+                        fwrite(decoded_data, 1, decoded_length, external_file);
                         fclose(external_file);
                     }
 
@@ -443,6 +437,9 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
                         fprintf(stderr, "Error! Can not create or modify external file. Please try again\n");
                         exit(EX_CANTCREAT);
                     }
+
+                    free(file_to_string);
+                    free(decoded_data);
                 }
 
                 else
@@ -458,7 +455,6 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
                     exit(EX_IOERR);
                 }
 
-                free(file_to_string);
             }
             else
             {
@@ -481,4 +477,4 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
         exit(EX_DATAERR);
     }
     return EXIT_SUCCESS;
-} */
+}
