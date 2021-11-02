@@ -269,16 +269,17 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
 
         if ((file = fopen(filename, "a")))
         {
-            if ((external_file = fopen(ef_name, "r")))
+            if ((external_file = fopen(ef_name, "rb")))
             {
                 fputs(internal_file_name, file);
                 fputc('\n', file);
 
-                char *file_to_string = 0;
+                /* char *file_to_string = 0;
                 long length;
 
                 fseek(external_file, 0, SEEK_END);
                 length = ftell(external_file);
+                printf("Length: %ld\n", length);
                 fseek(external_file, 0, SEEK_SET);
                 file_to_string = malloc(length);
                 if (file_to_string)
@@ -286,8 +287,29 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
                     fread(file_to_string, 1, length, external_file);
                 }
 
-                char encoded_data[Base64encode_len(strlen(file_to_string))];
-                Base64encode(encoded_data, file_to_string, strlen(file_to_string));
+                printf("File data: %s \n", file_to_string); */
+
+                unsigned char *file_to_string = 0;
+                long length;
+
+                fseek(external_file, 0, SEEK_END);
+                length = ftell(external_file);  
+                fseek(external_file, 0, SEEK_SET);
+                file_to_string = malloc(length);
+                if (file_to_string)
+                {
+                     fread(file_to_string, 1, length, external_file);
+                }
+                printf("Length: %ld\n", length);
+
+                for(int i = 0; i < length; i++)
+                {
+                    printf("%x", file_to_string[i]);
+                }
+                char *encoded_data;
+                encoded_data = b64_encode(file_to_string, length );
+                printf("\nEncoded data here: %s\n", encoded_data);
+
 
                 int encoded_lines = (strlen(encoded_data) / (MAX_LINE_LENGTH - 3)) + 1;
 
@@ -302,7 +324,6 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
                 }
 
                 fclose(external_file);
-                free(file_to_string);
             }
             else
             {
@@ -327,7 +348,7 @@ int copy_in_b64(char *filename, char *ef_name, char *if_name)
     return EXIT_SUCCESS;
 }
 
-int copy_out_b64(char *filename, char *if_name, char *ef_name)
+/* int copy_out_b64(char *filename, char *if_name, char *ef_name)
 {
     if (strlen(if_name) <= MAX_LINE_LENGTH - 3)
     {
@@ -411,7 +432,7 @@ int copy_out_b64(char *filename, char *if_name, char *ef_name)
                     char decoded_data[Base64decode_len(file_to_string)];
                     Base64decode(decoded_data, file_to_string);
                     FILE *external_file;
-                    if ((external_file = fopen(ef_name, "w+")))
+                    if ((external_file = fopen(ef_name, "w+b")))
                     {
                         fputs(decoded_data, external_file);
                         fclose(external_file);
@@ -460,4 +481,4 @@ int copy_out_b64(char *filename, char *if_name, char *ef_name)
         exit(EX_DATAERR);
     }
     return EXIT_SUCCESS;
-}
+} */
