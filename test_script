@@ -229,7 +229,7 @@ check_copyin_results()
 
 check_copyout_results()
 {
-    echo "Checking the external image file after being copied out if file system..."
+    echo "Checking the external image file after being copied out of file system..."
     $VSFS copyout test/test.notes testdir/testimage test/test_image_out
 
     if cmp -s "test/test_image_out" "test/test_image" 
@@ -240,6 +240,86 @@ check_copyout_results()
         exit 1
     fi
     rm -f test/test_image_out
+
+    echo "Checking the external text file after being copied out of file system..."
+    $VSFS copyout test/test.notes testdir/testtext test/test_text_out
+
+    if cmp -s "test/test_text_out" "test/test_text" 
+    then
+        echo "The text file after being copied out is the same as before"
+    else
+        echo "The text file after being copied out is corrupted"
+        exit 1
+    fi
+    rm -f test/test_text_out
+
+}
+
+check_mkdir_results()
+{
+    cp -f test/test_mkdir/mkdir_before.notes test/test_mkdir/mkdir.notes
+    echo "Checking filesystem after running mkdir for a recursive path..."
+    $VSFS mkdir test/test_mkdir/mkdir.notes dir1/dir2/dir3/dir4/dir5
+
+    if cmp -s "test/test_mkdir/mkdir.notes" "test/test_mkdir/mkdir_expected.notes"
+    then
+        echo "The filesystem after mkdir is as expected"
+    else
+        echo "The filesystem after mkdir is not correct"
+        exit 1
+    fi
+    rm -f test/test_mkdir/mkdir.notes
+
+}
+
+check_rm_results()
+{
+    cp -f test/test_rm/rm_before.notes test/test_rm/rm.notes
+    echo "Checking filesystem after running rm for a long file ..."
+    $VSFS rm test/test_rm/rm.notes testdir/testimage
+
+    if cmp -s "test/test_rm/rm.notes" "test/test_rm/rm_expected.notes"
+    then
+        echo "The filesystem after rm is as expected"
+    else
+        echo "The filesystem after rm is not correct"
+        exit 1
+    fi
+    rm -f test/test_rm/rm.notes
+}
+
+check_rmdir_results()
+{
+    cp -f test/test_rmdir/rmdir_before.notes test/test_rmdir/rmdir.notes
+    echo "Checking filesystem after running rmdir for a long directory ..."
+    $VSFS rmdir test/test_rmdir/rmdir.notes dir1
+
+    if cmp -s "test/test_rmdir/rmdir.notes" "test/test_rmdir/rmdir_expected.notes"
+    then
+        echo "The filesystem after rmdir is as expected"
+    else
+        echo "The filesystem after rmdir is not correct"
+        exit 1
+    fi
+    rm -f test/test_rmdir/rmdir.notes
+}
+
+check_defrag_result()
+{   
+    cp -f test/test_defrag/defrag_before.notes test/test_defrag/defrag.notes
+    echo "Checking filesystem after running defrag for a long filesystems with a lot of deleted entries ..."
+    $VSFS defrag test/test_defrag/defrag.notes
+
+    if cmp -s "test/test_defrag/defrag.notes" "test/test_defrag/defrag_expected.notes"
+    then
+        echo "The filesystem after defrag is as expected"
+    else
+        echo "The filesystem after defrag is not correct"
+        exit 1
+    fi
+    rm -f test/test_defrag/defrag.notes
+
+
 }
 
 init_test
@@ -251,5 +331,9 @@ exit_code_invalid_arguments
 test_for_invalid_fs
 check_copyin_results
 check_copyout_results
+check_mkdir_results
+check_rm_results
+check_rmdir_results
+check_defrag_result
 echo "All tests passed!"
 clean_up
