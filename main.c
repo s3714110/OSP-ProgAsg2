@@ -135,8 +135,7 @@ int upzip_file(char *filename)
 
     if ((output = popen(cmd, "r")))
     {
-        printf("Success\n");
-        failure = 0;
+        printf("Uncompressing %s ...\n", filename);
     }
     else
     {
@@ -145,10 +144,15 @@ int upzip_file(char *filename)
         exit(EX_OSERR);
     }
 
-    if(pclose(output) != 0)
+    if (pclose(output) == 0)
     {
-        printf("Failure\n");
+        printf("File %s has been succesfully uncompressed\n", filename);
+        failure = 0;
+    }
+    else
+    {
         failure = 1;
+        fprintf(stderr, "Error! Program is now exitting...\n");
         exit(EX_SOFTWARE);
     }
 
@@ -182,8 +186,16 @@ int main(int argc, char *argv[])
         }
         else
         {
-            upzip_file(argv[2]);
-            strncpy(filesystem_name, argv[2], strlen(argv[2]));
+            if (upzip_file(argv[2]) == 0)
+            {
+                strncpy(filesystem_name, argv[2], strlen(argv[2]) - 3);
+                printf("Program is now using uncompressed filesystem %s ...\n", filesystem_name);
+            }
+            else
+            {
+                fprintf(stderr, "Error! Program is now exitting...\n");
+                exit(EX_SOFTWARE);
+            }
         }
 
         if (strcmp(argv[1], "list") == 0)
