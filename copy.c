@@ -423,8 +423,6 @@ int copy_out_b64(char *filename, char *if_name, char *ef_name)
 
                     decoded_data[decoded_length] = '\0';
 
-                    
-
                     FILE *external_file;
                     if ((external_file = fopen(ef_name, "w+b")))
                     {
@@ -454,7 +452,6 @@ int copy_out_b64(char *filename, char *if_name, char *ef_name)
                     fprintf(stderr, "Error! Can not make changes to the temp file. Please try again\n");
                     exit(EX_IOERR);
                 }
-
             }
             else
             {
