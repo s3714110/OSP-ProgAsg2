@@ -14,7 +14,15 @@ make
 
 There are multiple options for this program. You can supply a valid .notes file into the parameters, of if you don't have one, the program will automatically create a new, empty .notes file in the path you specify
 
+- To list all the files in the filesystem
 ```bash
-./VSFS list *FS*
+./VSFS list [filesystem_name]
 ```
+
+* To copy an external file into the filesystem as an internal file
+```bash
+./VSFS list [filesystem_name] [external_file_name] [internal_file_name]
+```
+
+
 
