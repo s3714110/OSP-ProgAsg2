@@ -19,10 +19,42 @@ There are multiple options for this program. You can supply a valid .notes file 
 ./VSFS list [filesystem_name]
 ```
 
-* To copy an external file into the filesystem as an internal file
+* To copy an external file into the filesystem as an internal file and have its content encoded with base64
 ```bash
-./VSFS list [filesystem_name] [external_file_name] [internal_file_name]
+./VSFS copyin [filesystem_name] [external_file_name] [internal_file_name]
 ```
+
+* To copy an internal file within the filesystem to external file EF and have its content decoded with base64
+```bash
+./VSFS copyout [filesystem_name] [internal_file_name] [external_file_name]  
+```
+
+* To creates an empty internal directory in the filesystem
+```bash
+./VSFS mkdir [filesystem_name] [internal_dir_name]
+```
+
+* To remove an internal file from the filesystem
+```bash
+./VSFS rm [filesystem_name] [internal_file_name]
+```
+
+* To remove an internal directory from the filesystem
+```bash
+./VSFS rm [filesystem_name] [internal_dir_name]
+```
+
+* To defragment and sort out the filesystem
+```bash
+./VSFS defrag [filesystem_name]
+```
+
+* To create an index file of the filesystem and list all the indexes out
+```bash
+./VSFS index [filesystem_name]
+```
+
+
 
 
 
