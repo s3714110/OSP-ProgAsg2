@@ -26,9 +26,9 @@ int file_name_check(char *name)
 {
     int valid = 0;
 
-    if ((name[strlen(name) - 1] != '/'))    // can't end with '/'
+    if ((name[strlen(name) - 1] != '/')) // can't end with '/'
     {
-        if ((strcmp(name, ".") != 0) && (strcmp(name, "..") != 0) && (strcmp(name, "/") != 0))  // can't be exactly any 1 of these chars
+        if ((strcmp(name, ".") != 0) && (strcmp(name, "..") != 0) && (strcmp(name, "/") != 0)) // can't be exactly any 1 of these chars
         {
             valid = 1;
         }
@@ -42,7 +42,7 @@ int dir_name_check(char *name)
 {
     int valid = 0;
 
-    if ((strcmp(name, ".") != 0) && (strcmp(name, "..") != 0) && (strcmp(name, "/") != 0))  // can't be exactly any 1 of these chars
+    if ((strcmp(name, ".") != 0) && (strcmp(name, "..") != 0) && (strcmp(name, "/") != 0)) // can't be exactly any 1 of these chars
     {
         valid = 1;
     }
@@ -54,17 +54,17 @@ int dir_name_check(char *name)
 int make_recursive_path(char *path, mode_t mode)
 {
     assert(path && *path);
-    for (char *p = strchr(path + 1, '/'); p; p = strchr(p + 1, '/'))    // breaks path into sections with '/' as delimitter
+    for (char *p = strchr(path + 1, '/'); p; p = strchr(p + 1, '/')) // breaks path into sections with '/' as delimitter
     {
         *p = '\0';
-        if (mkdir(path, mode) == -1)    // creates 1 directory at a time
+        if (mkdir(path, mode) == -1) // creates 1 directory at a time
         {
-            if (errno != EEXIST)    // if errno is not eexist, then it means mkdir gives an error and can't create directory  
+            if (errno != EEXIST) // if errno is not eexist, then it means mkdir gives an error and can't create directory
             {
                 *p = '/';
                 return -1;
             }
-            else    // if directory already exists, do nothing
+            else // if directory already exists, do nothing
             {
                 printf("Path %s already exists. No need to be automatically created\n", path);
             }
@@ -115,8 +115,8 @@ int is_file_gz(char *filename)
     {
         strncpy(file_extensions, filename + (strlen(filename) - 3), MAX_PATH_LENGTH);
         if (strcmp(file_extensions, ".gz") == 0)
-        {   
-            
+        {
+
             is_gz = 1;
         }
     }
@@ -140,19 +140,19 @@ int zip_file(char *filename)
     {
         printf("Compressing %s ...\n", filename);
     }
-    else    // indicate popens can not run the command
+    else // indicate popens can not run the command
     {
         failure = 1;
         fprintf(stderr, "Cannot run %s ! Please try again \n", cmd);
         exit(EX_OSERR);
     }
 
-    if (pclose(output) == 0)    // if the exit code of popen is 0 then gzip has succeeded
+    if (pclose(output) == 0) // if the exit code of popen is 0 then gzip has succeeded
     {
         printf("File %s has been succesfully compressed into a .gz file\n", filename);
         failure = 0;
     }
-    else    // if exit code is not 0 then gzip command has failed, maybe due to invalid format, file doesnt exist, etc...
+    else // if exit code is not 0 then gzip command has failed, maybe due to invalid format, file doesnt exist, etc...
     {
         failure = 1;
         fprintf(stderr, "Error! Program is now exitting...\n");
@@ -203,11 +203,11 @@ int main(int argc, char *argv[])
 
     fprintf(stdout, "VSFS program for OSP Assignment 2, made by Lam Tran, student id: s3714110\n");
 
-    if (argc >= 3)  // all possible command requires at least 3 arguments, name of program, FS name, and option(s)
+    if (argc >= 3) // all possible command requires at least 3 arguments, name of program, FS name, and option(s)
     {
         char filesystem_name[MAX_PATH_LENGTH] = {0};
 
-        if (file_name_check(argv[2]) == 0)  // checks filesystem name
+        if (file_name_check(argv[2]) == 0) // checks filesystem name
         {
             fprintf(stderr, "Error! Invalid path to notes file. Please try again\n");
             exit(EX_DATAERR);
@@ -219,15 +219,15 @@ int main(int argc, char *argv[])
             exit(EX_CANTCREAT);
         }
 
-        if (is_file_gz(argv[2]) == 0)   // checks to see if a file is a .gz file
+        if (is_file_gz(argv[2]) == 0) // checks to see if a file is a .gz file
         {
             strncpy(filesystem_name, argv[2], strlen(argv[2])); // if not then fs name is the same as provided
         }
         else
-        {   
+        {
 
             printf("%s is a gz file and will need to be uncompressed\n", argv[2]);
-            if (upzip_file(argv[2]) == 0)   //unzip fs file
+            if (upzip_file(argv[2]) == 0) //unzip fs file
             {
                 strncpy(filesystem_name, argv[2], strlen(argv[2]) - 3); // now using uncompressed fs without .gz in the name
                 printf("Program is now using uncompressed filesystem %s ...\n", filesystem_name);
@@ -262,13 +262,13 @@ int main(int argc, char *argv[])
         {
             if (argc == 5)
             {
-                if (file_name_check(argv[3]) == 0)  // checks filename of external file
+                if (file_name_check(argv[3]) == 0) // checks filename of external file
                 {
                     fprintf(stderr, "Error! Invalid path to external file. Please try again\n");
                     exit(EX_DATAERR);
                 }
 
-                if (file_name_check(argv[4]) == 0)  // checks filename of internal file
+                if (file_name_check(argv[4]) == 0) // checks filename of internal file
                 {
                     fprintf(stderr, "Error! There is a syntax error with internal file name. Please try again!\n");
                     exit(EX_DATAERR);
@@ -385,7 +385,7 @@ int main(int argc, char *argv[])
         {
             if (argc == 4)
             {
-                if (dir_name_check(argv[3]) == 0)   // checks dir name 
+                if (dir_name_check(argv[3]) == 0) // checks dir name
                 {
                     fprintf(stderr, "Error! There is a syntax error with given directory name. Please try again!\n");
                     exit(EX_DATAERR);
@@ -407,7 +407,7 @@ int main(int argc, char *argv[])
         {
             if (argc == 4)
             {
-                if (file_name_check(argv[3]) == 0)  // checks file name 
+                if (file_name_check(argv[3]) == 0) // checks file name
                 {
                     fprintf(stderr, "Error! There is a syntax error with given file name. Please try again!\n");
                     exit(EX_DATAERR);
@@ -429,7 +429,7 @@ int main(int argc, char *argv[])
         {
             if (argc == 4)
             {
-                if (dir_name_check(argv[3]) == 0)   //check dir name
+                if (dir_name_check(argv[3]) == 0) //check dir name
                 {
                     fprintf(stderr, "Error! There is a syntax error with given directory name. Please try again!\n\n");
                     exit(EX_DATAERR);
@@ -455,8 +455,8 @@ int main(int argc, char *argv[])
                 init(filesystem_name);
                 fprintf(stdout, "VSFS is now running defrag function for filesystem %s ...\n\n", filesystem_name);
                 sleep(MenuBreakTime);
-                defrag(filesystem_name);    // removes deleted entries first
-                sort(filesystem_name);  // then sorts into file tree sequence
+                defrag(filesystem_name); // removes deleted entries first
+                sort(filesystem_name);   // then sorts into file tree sequence
             }
             else
             {
@@ -492,7 +492,7 @@ int main(int argc, char *argv[])
         // if the provided file name is a gz file, then compress the file again before program exits
         if (is_file_gz(argv[2]) == 1)
         {
-            printf("\nUncompressed file %s will need to be compressed back into a .gz file\n",filesystem_name);
+            printf("\nUncompressed file %s will need to be compressed back into a .gz file\n", filesystem_name);
             if (zip_file(filesystem_name) == 0)
             {
                 printf("Filesystem has been compressed into %s \n", argv[2]);

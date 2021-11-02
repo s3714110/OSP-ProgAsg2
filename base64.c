@@ -4,7 +4,6 @@
     Source: https://nachtimwald.com/2017/11/18/base64-encode-and-decode-in-c/
  */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
