@@ -41,7 +41,7 @@ There are multiple options for this program. You can supply a valid .notes file 
 
 * To remove an internal directory from the filesystem
 ```bash
-./VSFS rm [filesystem_name] [internal_dir_name]
+./VSFS rmdir [filesystem_name] [internal_dir_name]
 ```
 
 * To defragment and sort out the filesystem
@@ -64,7 +64,7 @@ make clean
 
 ## Additional notes
 
-By default, the copyin and copyout will encode and decode data of the external file, respectively, in order to make sure the program can store and preserve the content of all types of files, including text files or binary files, etc... The result is when you open the filesystem file with a note editor, the file content will be encoded using base64 algorithm. If you wish to just have the content of the external file in plain and orignal format, you can run these two commands, but be aware that the content of binary files may get corrupted and missing:
+By default, the copyin and copyout options will encode and decode data of the external file, respectively, in order to make sure the program can store and preserve the content of all types of files, including text files or binary files, etc... The result is when you open the filesystem file with a note editor, the file content will be encoded using base64 algorithm. If you wish to just have the content of the external file in plain and orignal format, you can run these two commands, but be aware that the content of binary files may get corrupted and missing:
 
 * To copy an external file into the filesystem as an internal file in plain format
 ```bash
